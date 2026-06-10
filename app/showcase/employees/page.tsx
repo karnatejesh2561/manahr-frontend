@@ -27,8 +27,8 @@ export default function EmployeesPage() {
       actions={
         <>
           <div className="sc-tabs">
-            <div className={`sc-tab ${view === 'grid' ? 'active' : ''}`} onClick={() => setView('grid')}>Grid</div>
-            <div className={`sc-tab ${view === 'list' ? 'active' : ''}`} onClick={() => setView('list')}>List</div>
+            <button className={`sc-tab ${view === 'grid' ? 'active' : ''}`} onClick={() => setView('grid')} data-testid="view-toggle-grid">Grid</button>
+            <button className={`sc-tab ${view === 'list' ? 'active' : ''}`} onClick={() => setView('list')} data-testid="view-toggle-list">List</button>
           </div>
           <button className="sc-btn"><Filter size={13} />Filter</button>
           <button className="sc-btn sc-btn-primary">+ Add employee</button>

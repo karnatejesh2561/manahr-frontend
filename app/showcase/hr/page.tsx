@@ -7,7 +7,12 @@ import DashboardShell from '@/components/showcase/DashboardShell';
 import { AreaChart, BarChart, DonutChart, RadialGauge, Heatmap, AnimatedNumber, Sparkline } from '@/components/showcase/Charts';
 
 export default function HRPage() {
-  const heatData = React.useMemo(() => Array.from({ length: 30 * 7 }, () => Math.floor(Math.random() * 100)), []);
+  const heatData = React.useMemo(() =>
+    Array.from({ length: 30 * 7 }, (_, i) => {
+      // Deterministic pseudo-random — stable between SSR & CSR
+      const v = Math.abs(Math.sin(i * 78.233) * 43758.5453);
+      return Math.floor((v - Math.floor(v)) * 100);
+    }), []);
 
   return (
     <DashboardShell

@@ -14,28 +14,28 @@ const navGroups = [
   {
     title: 'Overview',
     items: [
-      { name: 'Showcase Index', href: '/showcase', icon: Sparkles },
-      { name: 'Executive', href: '/showcase/executive', icon: LayoutDashboard },
-      { name: 'Analytics', href: '/showcase/analytics', icon: BarChart3 },
+      { name: 'Showcase Index', href: '/showcase', icon: Sparkles, testid: 'nav-showcase-index' },
+      { name: 'Executive', href: '/showcase/executive', icon: LayoutDashboard, testid: 'nav-executive' },
+      { name: 'Analytics', href: '/showcase/analytics', icon: BarChart3, testid: 'nav-analytics' },
     ],
   },
   {
     title: 'Operations',
     items: [
-      { name: 'CRM', href: '/showcase/crm', icon: Briefcase },
-      { name: 'HR', href: '/showcase/hr', icon: Users },
-      { name: 'Inventory', href: '/showcase/inventory', icon: Boxes },
-      { name: 'Projects', href: '/showcase/projects', icon: ClipboardList },
-      { name: 'Finance', href: '/showcase/finance', icon: Wallet },
+      { name: 'CRM', href: '/showcase/crm', icon: Briefcase, testid: 'nav-crm' },
+      { name: 'HR', href: '/showcase/hr', icon: Users, testid: 'nav-hr' },
+      { name: 'Inventory', href: '/showcase/inventory', icon: Boxes, testid: 'nav-inventory' },
+      { name: 'Projects', href: '/showcase/projects', icon: ClipboardList, testid: 'nav-projects' },
+      { name: 'Finance', href: '/showcase/finance', icon: Wallet, testid: 'nav-finance' },
     ],
   },
   {
     title: 'Admin',
     items: [
-      { name: 'Users & Roles', href: '/showcase/users', icon: UserCog },
-      { name: 'Employees', href: '/showcase/employees', icon: Users },
-      { name: 'Settings', href: '/showcase/settings', icon: Settings },
-      { name: 'Audit Log', href: '/showcase/audit', icon: ShieldCheck },
+      { name: 'Users & Roles', href: '/showcase/users', icon: UserCog, testid: 'nav-users' },
+      { name: 'Employees', href: '/showcase/employees', icon: Users, testid: 'nav-employees' },
+      { name: 'Settings', href: '/showcase/settings', icon: Settings, testid: 'nav-settings' },
+      { name: 'Audit Log', href: '/showcase/audit', icon: ShieldCheck, testid: 'nav-audit' },
     ],
   },
 ];
@@ -106,7 +106,7 @@ export default function DashboardShell({
                     return (
                       <Link key={item.href} href={item.href}
                             className={`sc-sidebar-link ${active ? 'active' : ''}`}
-                            data-testid={`nav-${item.name.toLowerCase().replace(/\s+/g, '-')}`}>
+                            data-testid={item.testid}>
                         <Icon size={15} />
                         <span>{item.name}</span>
                         {active && <ArrowUpRight size={12} className="ml-auto" />}

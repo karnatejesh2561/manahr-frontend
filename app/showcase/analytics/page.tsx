@@ -7,7 +7,12 @@ import DashboardShell from '@/components/showcase/DashboardShell';
 import { AreaChart, BarChart, DonutChart, RadialGauge, Heatmap, Funnel, MultiLineChart, AnimatedNumber, Sparkline } from '@/components/showcase/Charts';
 
 export default function AnalyticsPage() {
-  const heatmapData = React.useMemo(() => Array.from({ length: 24 * 7 }, (_, i) => Math.floor(Math.random() * 100) + (i % 7 === 0 ? 30 : 0)), []);
+  const heatmapData = React.useMemo(() =>
+    Array.from({ length: 28 * 7 }, (_, i) => {
+      // Deterministic pseudo-random — stable between SSR & CSR
+      const v = Math.abs(Math.sin(i * 12.9898) * 43758.5453);
+      return Math.floor((v - Math.floor(v)) * 100) + (i % 7 === 0 ? 30 : 0);
+    }), []);
   return (
     <DashboardShell
       title="Analytics studio"
