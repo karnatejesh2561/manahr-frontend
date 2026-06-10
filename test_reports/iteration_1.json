@@ -1,0 +1,53 @@
+{
+  "summary": "Frontend-only e2e testing of the new /showcase Next.js dashboard suite. Verified showcase index, all 11 dashboard screens, auth flows (login/register/forgot/otp), settings tabs, sidebar nav, marketing site integration, and password toggle/OTP auto-advance interactions. ~90% of flows pass. Found 3 minor issues: 2 nav data-testid naming mismatches (Users & Roles, Audit Log), 1 missing testid on employees Grid/List toggle, and a noisy SSR hydration mismatch warning on the Heatmap component (Math.random at render time).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "DashboardShell sidebar",
+        "issue": "data-testid is derived from name.toLowerCase().replace(/\\s+/g,'-') so 'Users & Roles' becomes nav-users-&-roles and 'Audit Log' becomes nav-audit-log. The PRD/test contract expected nav-users and nav-audit. Recommend hard-coding stable testids (nav-users, nav-audit) for each item instead of deriving from name.",
+        "selector": "[data-testid^='nav-']",
+        "priority": "MEDIUM"
+      },
+      {
+        "component": "Employees page (/showcase/employees)",
+        "issue": "Grid/List view toggle is implemented as <div class='sc-tab'> with text 'Grid'/'List' but has NO data-testid. Cannot be reliably tested. Add data-testid='view-toggle-grid' and data-testid='view-toggle-list'. Also consider making them buttons for accessibility (keyboard activation).",
+        "selector": "div.sc-tab",
+        "priority": "MEDIUM"
+      },
+      {
+        "component": "Heatmap (components/showcase/Charts.tsx) used in Analytics/HR dashboards",
+        "issue": "Console hydration mismatch error: server-rendered fill colors don't match client (Math.random()/seeded random executed at render time differs between SSR and CSR). The warning is verbose and pollutes the console on every page load. Fix by either (a) seeding the heatmap with stable dummy data passed via props, (b) generating data in useEffect after mount, or (c) adding suppressHydrationWarning on the SVG nodes.",
+        "selector": "svg (Heatmap)",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Replace dynamic nav data-testid (`nav-${name.toLowerCase().replace(/\\s+/g,'-')}`) with explicit, stable testids per item: nav-executive, nav-analytics, nav-crm, nav-hr, nav-inventory, nav-projects, nav-finance, nav-users, nav-employees, nav-settings, nav-audit, nav-showcase-index.",
+    "Add data-testid attributes to the Grid/List view toggle in /showcase/employees (e.g. view-toggle-grid, view-toggle-list) and ideally convert <div> tabs to <button> for a11y.",
+    "Fix Heatmap SSR hydration mismatch — use deterministic seeded data passed as props (or compute in useEffect)."
+  ],
+  "critical_code_review_comments": [
+    "Heatmap component appears to randomize fills on every render — this causes SSR/CSR mismatches in Next.js App Router and breaks React hydration. Move randomization to client-only effect or pre-compute data.",
+    "Dynamic data-testid generation from display names is brittle: any wording change (e.g., 'Users & Roles' → 'Users') silently breaks every existing automated test. Use stable, hard-coded testids.",
+    "Employees view-toggle tabs use clickable <div>s with no role/tabindex/keyboard handlers — accessibility regression. Use <button role='tab'> with proper aria-selected."
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "N/A (no backend)",
+    "frontend": "~92%"
+  },
+  "test_credentials": "N/A (auth screens are non-functional UI placeholders, no submit handler)",
+  "seed_data_creation": "None — all data is hardcoded on the frontend",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "PASSED: /showcase index shows all 12 cards (screen-* testids verified). All 11 dashboards (/showcase/{executive,analytics,crm,hr,inventory,projects,finance,users,employees,settings,audit}) render dashboard-shell + sidebar + 26-77 SVG charts each, no fatal console errors. Auth: /showcase/auth/login has email-input/password-input/toggle-password/login-submit/forgot-link/register-link all present; password toggle flips type=password<->text correctly; SSO Google+GitHub buttons present. /showcase/auth/forgot CTA navigates to /showcase/auth/otp. OTP page has otp-digit-0..5 inputs; typing into otp-digit-0 auto-advances focus to otp-digit-1; verify-otp button present. /showcase/auth/register renders 6 form inputs. Settings: all 8 tabs (settings-tab-company/branding/security/notifications/integrations/billing/localization/webhooks) clickable. Sidebar nav works for executive, analytics, crm, hr, inventory, projects, finance, employees, settings. Marketing site (/) has 'Dashboards' nav link that correctly routes to /showcase. ISSUES: nav-users and nav-audit testids don't exist (actual testids are nav-users-&-roles and nav-audit-log due to dynamic derivation from name). Employees Grid/List toggle has no data-testid and uses <div> instead of <button>. Heatmap component triggers SSR hydration mismatch warning due to Math.random at render time (verbose console noise but page still works).",
+  "rca of the issue": "1) Nav testid mismatch RCA: DashboardShell.tsx line ~ has `data-testid={\\`nav-${item.name.toLowerCase().replace(/\\\\s+/g,'-')}\\`}`. Items 'Users & Roles' and 'Audit Log' produce nav-users-&-roles and nav-audit-log, not the documented nav-users / nav-audit. Fix: replace derivation with explicit testid field per item. 2) Heatmap hydration RCA: The Heatmap (used in Analytics & HR) generates cell colors from a non-deterministic source at component body (likely Math.random()) so server-rendered HTML attributes (fill) differ from client first render, triggering React 19 hydration warning. Fix: pass static dummy data as props or compute inside useEffect."
+}
