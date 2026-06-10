@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Building2, Lock, Bell, Plug, CreditCard, Palette, Globe, Webhook } from 'lucide-react';
 import DashboardShell from '@/components/showcase/DashboardShell';
+import { useToast } from '@/components/showcase/Interactions';
 
 const sections = [
   { id: 'company', name: 'Company', icon: Building2 },
@@ -18,6 +19,7 @@ const sections = [
 
 export default function SettingsPage() {
   const [active, setActive] = React.useState('company');
+  const { push } = useToast();
 
   return (
     <DashboardShell
@@ -55,7 +57,7 @@ export default function SettingsPage() {
               </div>
               <div className="flex justify-end gap-2 mt-7">
                 <button className="sc-btn sc-btn-ghost">Cancel</button>
-                <button className="sc-btn sc-btn-primary" data-testid="save-settings">Save changes</button>
+                <button className="sc-btn sc-btn-primary" onClick={() => push('Company info saved · changes propagated to billing & invoices', 'success')} data-testid="save-settings">Save changes</button>
               </div>
             </motion.div>
           )}

@@ -8,8 +8,10 @@ import {
 } from 'lucide-react';
 import DashboardShell from '@/components/showcase/DashboardShell';
 import { AreaChart, BarChart, DonutChart, RadialGauge, AnimatedNumber, Sparkline, MultiLineChart } from '@/components/showcase/Charts';
+import { useToast } from '@/components/showcase/Interactions';
 
 export default function ExecutivePage() {
+  const { push } = useToast();
   return (
     <DashboardShell
       title="Executive overview"
@@ -18,8 +20,8 @@ export default function ExecutivePage() {
       actions={
         <>
           <button className="sc-btn sc-btn-ghost" data-testid="date-range"><span style={{ fontSize: 12 }}>Last 30 days</span></button>
-          <button className="sc-btn" data-testid="export-btn"><Download size={13} />Export</button>
-          <button className="sc-btn sc-btn-primary" data-testid="ai-summary"><Sparkles size={13} />AI Summary</button>
+          <button className="sc-btn" onClick={() => push('Executive report queued · PDF · 12 pages', 'info')} data-testid="export-btn"><Download size={13} />Export</button>
+          <button className="sc-btn sc-btn-primary" onClick={() => push('AI summary refreshed · 5 new insights', 'success')} data-testid="ai-summary"><Sparkles size={13} />AI Summary</button>
         </>
       }
     >

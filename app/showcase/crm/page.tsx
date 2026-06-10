@@ -2,27 +2,92 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Filter, Search, Star, Phone, Mail, MoreHorizontal, TrendingUp } from 'lucide-react';
+import { Plus, Filter, Phone, Mail } from 'lucide-react';
 import DashboardShell from '@/components/showcase/DashboardShell';
-import { Funnel, AreaChart, DonutChart, Sparkline, AnimatedNumber } from '@/components/showcase/Charts';
+import { Funnel, DonutChart, AnimatedNumber } from '@/components/showcase/Charts';
+import { Drawer, ConfirmDialog, Field, FilterPanel, FilterChip, RowMenu, SearchInput, useToast } from '@/components/showcase/Interactions';
 
 const stages = [
-  { name: 'Prospect', color: '#9ea0b3', count: 24, value: '$1.2M' },
-  { name: 'Qualified', color: '#6affe0', count: 16, value: '$840k' },
-  { name: 'Proposal', color: '#ffb547', count: 9,  value: '$520k' },
-  { name: 'Negotiation', color: '#ff6bcb', count: 5, value: '$310k' },
-  { name: 'Closed Won', color: '#b6ff3c', count: 12, value: '$680k' },
+  { name: 'Prospect', color: '#9ea0b3' },
+  { name: 'Qualified', color: '#6affe0' },
+  { name: 'Proposal', color: '#ffb547' },
+  { name: 'Negotiation', color: '#ff6bcb' },
+  { name: 'Closed Won', color: '#b6ff3c' },
 ];
 
-const deals = [
-  { c: 'Northwind Traders', l: 'Yui Tanaka', v: '$84,000', s: 'Negotiation', p: 78, due: '3d', color: '#ff6bcb' },
-  { c: 'Globex Corp',       l: 'Marcus Hale', v: '$112,500', s: 'Proposal', p: 62, due: '7d', color: '#ffb547' },
-  { c: 'Initech',           l: 'Sofia Reyes', v: '$48,200', s: 'Qualified', p: 35, due: '14d', color: '#6affe0' },
-  { c: 'Acme Robotics',     l: 'Leon Park', v: '$198,000', s: 'Negotiation', p: 85, due: '2d', color: '#ff6bcb' },
-  { c: 'Vandelay Industries', l: 'Yui Tanaka', v: '$36,500', s: 'Prospect', p: 18, due: '21d', color: '#9ea0b3' },
+type Deal = { id: string; c: string; l: string; v: number; s: string; p: number; due: string };
+
+const initialDeals: Deal[] = [
+  { id: 'd1', c: 'Northwind Traders',   l: 'Yui Tanaka',  v:  84000, s: 'Negotiation', p: 78, due: '3d'  },
+  { id: 'd2', c: 'Globex Corp',         l: 'Marcus Hale', v: 112500, s: 'Proposal',    p: 62, due: '7d'  },
+  { id: 'd3', c: 'Initech',             l: 'Sofia Reyes', v:  48200, s: 'Qualified',   p: 35, due: '14d' },
+  { id: 'd4', c: 'Acme Robotics',       l: 'Leon Park',   v: 198000, s: 'Negotiation', p: 85, due: '2d'  },
+  { id: 'd5', c: 'Vandelay Industries', l: 'Yui Tanaka',  v:  36500, s: 'Prospect',    p: 18, due: '21d' },
+  { id: 'd6', c: 'Stark Industries',    l: 'Marcus Hale', v: 248000, s: 'Closed Won',  p:100, due: '—'   },
 ];
+
+const stageColors: Record<string, string> = Object.fromEntries(stages.map(s => [s.name, s.color]));
+const owners = ['Yui Tanaka', 'Marcus Hale', 'Sofia Reyes', 'Leon Park'];
+
+const blank = (): Omit<Deal, 'id'> => ({ c: '', l: 'Yui Tanaka', v: 0, s: 'Prospect', p: 20, due: '14d' });
 
 export default function CRMPage() {
+  const [deals, setDeals] = React.useState<Deal[]>(initialDeals);
+  const [search, setSearch] = React.useState('');
+  const [filterOpen, setFilterOpen] = React.useState(false);
+  const [stageFilters, setStageFilters] = React.useState<string[]>([]);
+  const [ownerFilters, setOwnerFilters] = React.useState<string[]>([]);
+  const [minValue, setMinValue] = React.useState(0);
+
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [editing, setEditing] = React.useState<Deal | null>(null);
+  const [form, setForm] = React.useState(blank());
+
+  const [confirmDel, setConfirmDel] = React.useState<Deal | null>(null);
+  const { push } = useToast();
+
+  const filtered = deals.filter(d => {
+    if (search && !d.c.toLowerCase().includes(search.toLowerCase()) && !d.l.toLowerCase().includes(search.toLowerCase())) return false;
+    if (stageFilters.length && !stageFilters.includes(d.s)) return false;
+    if (ownerFilters.length && !ownerFilters.includes(d.l)) return false;
+    if (d.v < minValue) return false;
+    return true;
+  });
+
+  const totals = {
+    pipeline: deals.reduce((s, d) => s + d.v, 0),
+    open: deals.filter(d => d.s !== 'Closed Won').length,
+    winRate: Math.round((deals.filter(d => d.s === 'Closed Won').length / deals.length) * 1000) / 10,
+    avgCycle: 24,
+  };
+
+  const openCreate = () => {
+    setEditing(null); setForm(blank()); setDrawerOpen(true);
+  };
+  const openEdit = (d: Deal) => {
+    setEditing(d);
+    setForm({ c: d.c, l: d.l, v: d.v, s: d.s, p: d.p, due: d.due });
+    setDrawerOpen(true);
+  };
+  const submit = () => {
+    if (!form.c.trim()) { push('Company name is required', 'danger'); return; }
+    if (editing) {
+      setDeals(prev => prev.map(d => d.id === editing.id ? { ...editing, ...form } : d));
+      push(`Updated · ${form.c}`);
+    } else {
+      const id = 'd' + Date.now();
+      setDeals(prev => [{ id, ...form }, ...prev]);
+      push(`Deal added · ${form.c}`);
+    }
+    setDrawerOpen(false);
+  };
+  const remove = (d: Deal) => {
+    setDeals(prev => prev.filter(x => x.id !== d.id));
+    push(`Removed · ${d.c}`, 'info');
+  };
+
+  const activeFilterCount = stageFilters.length + ownerFilters.length + (minValue > 0 ? 1 : 0);
+
   return (
     <DashboardShell
       title="CRM command center"
@@ -30,25 +95,24 @@ export default function CRMPage() {
       breadcrumb={['Workspace', 'Sales', 'CRM']}
       actions={
         <>
-          <button className="sc-btn"><Filter size={13} />Filters</button>
-          <button className="sc-btn sc-btn-primary" data-testid="add-deal"><Plus size={13} />New deal</button>
+          <button className="sc-btn" onClick={() => setFilterOpen(!filterOpen)} data-testid="open-filters">
+            <Filter size={13} />Filters{activeFilterCount > 0 && <span className="sc-chip sc-chip-accent" style={{ padding: '1px 6px', fontSize: 10 }}>{activeFilterCount}</span>}
+          </button>
+          <button className="sc-btn sc-btn-primary" onClick={openCreate} data-testid="add-deal"><Plus size={13} />New deal</button>
         </>
       }
     >
       {/* KPI */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[
-          { l: 'Pipeline', v: 3550000, prefix: '$', c: '#b6ff3c', d: '+18%' },
-          { l: 'Deals open', v: 66, c: '#6affe0', d: '+4' },
-          { l: 'Win rate', v: 32.4, suffix: '%', decimals: 1, c: '#ff6bcb', d: '+2.1pp' },
-          { l: 'Avg cycle', v: 24, suffix: 'd', c: '#ffb547', d: '−3d' },
+          { l: 'Pipeline', v: totals.pipeline, prefix: '$', c: '#b6ff3c' },
+          { l: 'Deals open', v: totals.open, c: '#6affe0' },
+          { l: 'Win rate', v: totals.winRate, suffix: '%', decimals: 1, c: '#ff6bcb' },
+          { l: 'Avg cycle', v: totals.avgCycle, suffix: 'd', c: '#ffb547' },
         ].map((k, i) => (
           <motion.div key={k.l} className="sc-card p-5"
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-            <div className="flex justify-between">
-              <div style={{ fontSize: 11, color: 'var(--sc-text-faint)' }}>{k.l.toUpperCase()}</div>
-              <span className="sc-chip sc-chip-success" style={{ fontSize: 10 }}>{k.d}</span>
-            </div>
+            <div style={{ fontSize: 11, color: 'var(--sc-text-faint)' }}>{k.l.toUpperCase()}</div>
             <div className="sc-stat-value mt-3" style={{ color: k.c }}>
               <AnimatedNumber value={k.v} prefix={k.prefix} suffix={k.suffix} decimals={k.decimals ?? 0} />
             </div>
@@ -56,39 +120,81 @@ export default function CRMPage() {
         ))}
       </div>
 
+      {/* Filter panel */}
+      <FilterPanel open={filterOpen}>
+        <span style={{ fontSize: 11, color: 'var(--sc-text-faint)' }}>STAGE</span>
+        {stages.map(s => (
+          <FilterChip key={s.name} active={stageFilters.includes(s.name)}
+            onClick={() => setStageFilters(p => p.includes(s.name) ? p.filter(x => x !== s.name) : [...p, s.name])}
+            testid={`filter-stage-${s.name.toLowerCase().replace(/\s+/g, '-')}`}>
+            {s.name}
+          </FilterChip>
+        ))}
+        <div className="h-5 w-px" style={{ background: 'var(--sc-border)' }} />
+        <span style={{ fontSize: 11, color: 'var(--sc-text-faint)' }}>OWNER</span>
+        {owners.map(o => (
+          <FilterChip key={o} active={ownerFilters.includes(o)}
+            onClick={() => setOwnerFilters(p => p.includes(o) ? p.filter(x => x !== o) : [...p, o])}
+            testid={`filter-owner-${o.toLowerCase().replace(/\s+/g, '-')}`}>
+            {o}
+          </FilterChip>
+        ))}
+        <div className="h-5 w-px" style={{ background: 'var(--sc-border)' }} />
+        <label className="flex items-center gap-2" style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>
+          MIN VALUE
+          <input type="number" className="sc-input" style={{ width: 110, padding: '6px 10px', fontSize: 12 }}
+                 value={minValue} onChange={(e) => setMinValue(Number(e.target.value) || 0)}
+                 data-testid="filter-min-value" />
+        </label>
+        {activeFilterCount > 0 && (
+          <button onClick={() => { setStageFilters([]); setOwnerFilters([]); setMinValue(0); }}
+                  className="sc-btn sc-btn-ghost" style={{ padding: '6px 12px', fontSize: 11 }}
+                  data-testid="clear-filters">
+            Clear all
+          </button>
+        )}
+      </FilterPanel>
+
       {/* Pipeline kanban */}
       <motion.div className="mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
         <div className="flex items-center justify-between mb-3">
           <div className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>Sales pipeline · Q4</div>
-          <div className="flex items-center gap-3" style={{ fontSize: 12, color: 'var(--sc-text-dim)' }}>
-            <span>Showing 66 of 248 deals</span>
-            <div className="sc-tabs"><div className="sc-tab active">All</div><div className="sc-tab">Mine</div><div className="sc-tab">Hot</div></div>
+          <div style={{ fontSize: 12, color: 'var(--sc-text-dim)' }}>
+            Showing {filtered.length} of {deals.length} deals
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
-          {stages.map((s, si) => (
-            <div key={s.name} className="sc-kanban-col">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: s.color, boxShadow: `0 0 6px ${s.color}` }} />
-                  <span className="sc-sans" style={{ fontSize: 12, fontWeight: 600 }}>{s.name}</span>
-                </div>
-                <span style={{ fontSize: 10, color: 'var(--sc-text-faint)', fontFamily: 'monospace' }}>{s.count}</span>
-              </div>
-              <div style={{ fontSize: 10, color: 'var(--sc-text-faint)', marginBottom: 12 }}>{s.value} total</div>
-              {Array.from({ length: Math.min(3, s.count) }).map((_, i) => (
-                <motion.div key={i} className="sc-kanban-card"
-                  initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: si * 0.05 + i * 0.05 }}>
-                  <div style={{ fontSize: 12, fontWeight: 500 }}>{['Northwind', 'Globex', 'Initech', 'Acme', 'Vandelay'][i]} · Q{i+1}</div>
-                  <div style={{ fontSize: 10, color: 'var(--sc-text-faint)', marginTop: 4 }}>{['Yui T.', 'Marcus H.', 'Sofia R.'][i % 3]}</div>
-                  <div className="flex items-center justify-between mt-3">
-                    <span style={{ fontSize: 11, color: s.color, fontFamily: 'monospace' }}>${(48 + i * 22) * (si + 1)}k</span>
-                    <span className="sc-chip" style={{ fontSize: 9, padding: '2px 6px' }}>{['3d','7d','14d'][i % 3]}</span>
+          {stages.map((s) => {
+            const inStage = filtered.filter(d => d.s === s.name);
+            const stageTotal = inStage.reduce((acc, d) => acc + d.v, 0);
+            return (
+              <div key={s.name} className="sc-kanban-col">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: s.color, boxShadow: `0 0 6px ${s.color}` }} />
+                    <span className="sc-sans" style={{ fontSize: 12, fontWeight: 600 }}>{s.name}</span>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          ))}
+                  <span style={{ fontSize: 10, color: 'var(--sc-text-faint)', fontFamily: 'monospace' }}>{inStage.length}</span>
+                </div>
+                <div style={{ fontSize: 10, color: 'var(--sc-text-faint)', marginBottom: 12 }}>${(stageTotal/1000).toFixed(0)}k total</div>
+                {inStage.slice(0, 3).map((d) => (
+                  <motion.div key={d.id} className="sc-kanban-card"
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                    onClick={() => openEdit(d)}>
+                    <div style={{ fontSize: 12, fontWeight: 500 }}>{d.c}</div>
+                    <div style={{ fontSize: 10, color: 'var(--sc-text-faint)', marginTop: 4 }}>{d.l}</div>
+                    <div className="flex items-center justify-between mt-3">
+                      <span style={{ fontSize: 11, color: s.color, fontFamily: 'monospace' }}>${(d.v/1000).toFixed(0)}k</span>
+                      <span className="sc-chip" style={{ fontSize: 9, padding: '2px 6px' }}>{d.due}</span>
+                    </div>
+                  </motion.div>
+                ))}
+                {inStage.length === 0 && (
+                  <div style={{ fontSize: 11, color: 'var(--sc-text-faint)', padding: 12, textAlign: 'center' }}>No deals</div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </motion.div>
 
@@ -117,24 +223,22 @@ export default function CRMPage() {
         </motion.div>
       </div>
 
-      {/* Recent deals table */}
+      {/* Deals table */}
       <motion.div className="sc-card p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
         <div className="flex items-center justify-between mb-4">
-          <div className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>Hot deals</div>
-          <div className="relative">
-            <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--sc-text-faint)' }} />
-            <input placeholder="Search deals..." className="sc-input pl-8" style={{ width: 220 }} data-testid="deal-search" />
-          </div>
+          <div className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>All deals ({filtered.length})</div>
+          <SearchInput value={search} onChange={setSearch} placeholder="Search deals..." testid="deal-search" />
         </div>
         <div className="overflow-x-auto sc-scroll">
           <table className="sc-table">
             <thead><tr><th>COMPANY</th><th>OWNER</th><th>VALUE</th><th>STAGE</th><th>PROBABILITY</th><th>CLOSE</th><th></th></tr></thead>
             <tbody>
-              {deals.map((d, i) => (
-                <tr key={i}>
+              {filtered.map((d) => (
+                <tr key={d.id} data-testid={`deal-row-${d.id}`}>
                   <td>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${d.color}22`, color: d.color, fontWeight: 700 }}>
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center"
+                           style={{ background: `${stageColors[d.s]}22`, color: stageColors[d.s], fontWeight: 700 }}>
                         {d.c[0]}
                       </div>
                       <div>
@@ -144,8 +248,8 @@ export default function CRMPage() {
                     </div>
                   </td>
                   <td style={{ color: 'var(--sc-text-dim)' }}>{d.l}</td>
-                  <td style={{ fontFamily: 'monospace', color: 'var(--sc-accent)' }}>{d.v}</td>
-                  <td><span className="sc-chip" style={{ color: d.color, borderColor: `${d.color}40`, background: `${d.color}15` }}>{d.s}</span></td>
+                  <td style={{ fontFamily: 'monospace', color: 'var(--sc-accent)' }}>${d.v.toLocaleString()}</td>
+                  <td><span className="sc-chip" style={{ color: stageColors[d.s], borderColor: `${stageColors[d.s]}40`, background: `${stageColors[d.s]}15` }}>{d.s}</span></td>
                   <td style={{ width: 160 }}>
                     <div className="flex items-center gap-2">
                       <div className="sc-progress flex-1">
@@ -156,18 +260,91 @@ export default function CRMPage() {
                   </td>
                   <td style={{ color: 'var(--sc-text-dim)' }}>in {d.due}</td>
                   <td>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 items-center">
                       <button className="p-1.5 rounded-lg hover:bg-white/5"><Phone size={12} /></button>
                       <button className="p-1.5 rounded-lg hover:bg-white/5"><Mail size={12} /></button>
-                      <button className="p-1.5 rounded-lg hover:bg-white/5"><MoreHorizontal size={12} /></button>
+                      <RowMenu items={[
+                        { label: 'Edit deal', onClick: () => openEdit(d), testid: `edit-deal-${d.id}` },
+                        { label: 'Mark as won', onClick: () => { setDeals(p => p.map(x => x.id === d.id ? { ...x, s: 'Closed Won', p: 100 } : x)); push(`${d.c} → Closed Won`); } },
+                        { label: 'Delete', onClick: () => setConfirmDel(d), danger: true, testid: `delete-deal-${d.id}` },
+                      ]} />
                     </div>
                   </td>
                 </tr>
               ))}
+              {filtered.length === 0 && (
+                <tr><td colSpan={7} style={{ textAlign: 'center', padding: 32, color: 'var(--sc-text-faint)' }}>
+                  No deals match your filters. <button onClick={() => { setSearch(''); setStageFilters([]); setOwnerFilters([]); setMinValue(0); }} className="underline" style={{ color: 'var(--sc-accent)' }}>Clear all</button>
+                </td></tr>
+              )}
             </tbody>
           </table>
         </div>
       </motion.div>
+
+      {/* Add / Edit drawer */}
+      <Drawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        title={editing ? 'Edit deal' : 'New deal'}
+        subtitle={editing ? `Update ${editing.c}` : 'Add a new opportunity to your pipeline'}
+        footer={
+          <>
+            <button className="sc-btn sc-btn-ghost" onClick={() => setDrawerOpen(false)} data-testid="drawer-cancel">Cancel</button>
+            <button className="sc-btn sc-btn-primary" onClick={submit} data-testid="drawer-submit">
+              {editing ? 'Save changes' : 'Create deal'}
+            </button>
+          </>
+        }
+      >
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Company" span={2}>
+            <input className="sc-input" value={form.c} onChange={(e) => setForm({ ...form, c: e.target.value })}
+                   placeholder="e.g. Northwind Traders" data-testid="deal-company" autoFocus />
+          </Field>
+          <Field label="Owner">
+            <select className="sc-input" value={form.l} onChange={(e) => setForm({ ...form, l: e.target.value })} data-testid="deal-owner">
+              {owners.map(o => <option key={o} value={o}>{o}</option>)}
+            </select>
+          </Field>
+          <Field label="Deal value (USD)">
+            <input type="number" className="sc-input" value={form.v}
+                   onChange={(e) => setForm({ ...form, v: Number(e.target.value) || 0 })}
+                   placeholder="0" data-testid="deal-value" />
+          </Field>
+          <Field label="Stage">
+            <select className="sc-input" value={form.s} onChange={(e) => setForm({ ...form, s: e.target.value })} data-testid="deal-stage">
+              {stages.map(s => <option key={s.name}>{s.name}</option>)}
+            </select>
+          </Field>
+          <Field label="Probability (%)">
+            <input type="number" min={0} max={100} className="sc-input" value={form.p}
+                   onChange={(e) => setForm({ ...form, p: Number(e.target.value) || 0 })} />
+          </Field>
+          <Field label="Expected close" span={2}>
+            <input className="sc-input" value={form.due} onChange={(e) => setForm({ ...form, due: e.target.value })}
+                   placeholder="e.g. 14d or Dec 24" />
+          </Field>
+        </div>
+
+        <div className="mt-6 pt-6 border-t" style={{ borderColor: 'var(--sc-border)' }}>
+          <div style={{ fontSize: 11, color: 'var(--sc-text-faint)', marginBottom: 10 }}>QUICK ACTIONS</div>
+          <div className="flex gap-2 flex-wrap">
+            <button className="sc-chip" style={{ cursor: 'pointer' }}>+ Add note</button>
+            <button className="sc-chip" style={{ cursor: 'pointer' }}>+ Log call</button>
+            <button className="sc-chip" style={{ cursor: 'pointer' }}>+ Schedule demo</button>
+          </div>
+        </div>
+      </Drawer>
+
+      <ConfirmDialog
+        open={!!confirmDel}
+        onClose={() => setConfirmDel(null)}
+        onConfirm={() => confirmDel && remove(confirmDel)}
+        title="Delete this deal?"
+        message={`This will permanently remove "${confirmDel?.c}" from your pipeline. This action can't be undone.`}
+        confirmLabel="Delete deal"
+      />
     </DashboardShell>
   );
 }

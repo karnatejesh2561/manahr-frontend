@@ -1,0 +1,40 @@
+{
+  "summary": "Frontend-only e2e testing of the new INTERACTIVE /showcase dashboard suite (iteration 2). Verified all add/edit/delete/filter flows across CRM, Employees, Users, Inventory, Finance, Audit, Projects + drawer/confirm-dialog/toast/sidebar-nav primitives. ~95% pass rate. Previous iteration regressions are FIXED: sidebar nav testids (nav-users, nav-audit, etc.) work, Employees view-toggle uses <button> with data-testid=view-toggle-grid/list, and no SSR hydration mismatch warnings in console. Drawer correctly slides in from the RIGHT (verified x=1460, w=460 in 1920 viewport). All add-drawer flows actually mutate state (new rows appear, KPIs change, toasts fire). Found 2 minor issues only.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "Audit page filter chips (/showcase/audit)",
+        "issue": "Severity filter chip testids are filter-sev-info / filter-sev-success / filter-sev-warning / filter-sev-critical. PRD / test-contract documented them as filter-severity-* (full word). Functional behaviour works, but the naming mismatch will break any external test relying on the contract. Rename to filter-severity-* or update the contract.",
+        "selector": "[data-testid^='filter-sev-']",
+        "priority": "LOW"
+      },
+      {
+        "component": "Executive Export/AI Summary buttons and Audit Export button",
+        "issue": "Clicking [data-testid=export-btn], [data-testid=ai-summary] on /showcase/executive and [data-testid=export-audit] on /showcase/audit did not produce a visible toast in the toast-stack DOM (toast_items=0 after click). The buttons are wired (no console error, no crash) but the toast either doesn't fire or fires-and-dismisses faster than expected. Other toasts (CRM add deal, Users MFA toggle) DO appear correctly. Suggest verifying useToast().push() is actually called inside these click handlers, or that the toast duration matches 3.2s.",
+        "selector": "[data-testid='export-btn'], [data-testid='ai-summary'], [data-testid='export-audit']",
+        "priority": "LOW"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Rename audit severity chip testids from filter-sev-{level} to filter-severity-{level} to match the contract (or update PRD).",
+    "Verify that toast notifications are wired for export-btn / ai-summary / export-audit click handlers; currently no toast DOM appears after click."
+  ],
+  "critical_code_review_comments": [
+    "Drawer fix is correct: motion.aside uses position:fixed top-0 right-0 with width 460 and initial x:'100%' → animate x:0, which works because there are no transformed ancestors in the shell tree (verified via getComputedStyle walk: all ancestors transform:none).",
+    "Test-timing gotcha: bounding box of the drawer measured immediately after click reports x≈1917 (mid-animation). Tests need a 600-800ms wait for the spring animation to settle before measuring or clicking footer buttons.",
+    "Audit testid drift suggests there is no central registry of testids — consider exporting a TestIds constant module so contract and implementation cannot diverge."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (no backend)", "frontend": "~95%"},
+  "test_credentials": "N/A (showcase pages are public dummy data, no auth required)",
+  "seed_data_creation": "None — all data is local React useState",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "PASSED (verified in iteration 2): (1) Sidebar testids nav-executive/analytics/crm/hr/inventory/projects/finance/users/employees/settings/audit all exist and navigate; (2) Employees view-toggle-grid and view-toggle-list are <button> elements; (3) No hydration mismatch warnings in console (Heatmap fix verified); (4) Drawer slides from RIGHT (x=1460, w=460 in 1920 viewport), with no transformed ancestor; (5) ESC + drawer-backdrop click + drawer-close all close the drawer; (6) CRM open-filters → filter-stage-negotiation narrows list, Showing X of Y counter updates; (7) CRM add-deal drawer with deal-company/deal-value/deal-owner/deal-stage fields submits, adds row 'Test Company Inc', updates Pipeline KPI ($615,218 in test session), and fires 1 toast in toast-stack; (8) CRM row-menu-trigger × 7 rows, opens row-menu-panel with [Edit deal, Mark as won, Delete], Delete → confirm-dialog → confirm-ok removes row; (9) Employees emp-search filter + add-employee drawer (emp-name/emp-role/emp-email/emp-dept) adds card; (10) Users invite-user drawer (user-name/user-email/user-role) adds row, row menu has [Edit, Disable MFA, Suspend, Remove]; (11) Inventory add-product (product-sku/product-name/product-stock) drawer + reorder buttons reorder-RB-051/CH-882/LD-318/BO-114 each open confirm-dialog; (12) Finance new-invoice (invoice-client/invoice-amount/invoice-due) adds row, row menu Mark-as-paid changes status; (13) Projects add-task (task-title) + 4 per-column add buttons; (14) Settings save-settings clickable. ISSUES (low priority): (a) Audit chips are filter-sev-* not filter-severity-* — naming drift; (b) export-btn / ai-summary / export-audit clicks don't produce visible toasts in DOM (handlers fire without error). Console: 4 font-preload warnings (harmless Next.js noise), no React errors, no hydration warnings.",
+  "rca of the issue": "Audit testid mismatch RCA: /app/app/showcase/audit/page.tsx hardcodes data-testid=`filter-sev-${level}` while the PRD/test contract specified filter-severity-${level}. Fix: change template literal in audit/page.tsx to filter-severity-${level}. Toast-not-firing RCA (unconfirmed): export-btn / ai-summary / export-audit handlers in executive/page.tsx and audit/page.tsx likely either (a) don't call useToast().push(), or (b) call a no-op stub. Inspect those handlers and add toast.push('Export started', 'info') style call. CRM add_deal initial test failure RCA: the drawer animation (framer-motion spring) takes ~500-700ms to slide in; bounding box check at <500ms after click reports the drawer mid-animation at x≈1917 (still translateX(100%)). Production behaviour is correct — this was a test-timing artefact, not a product bug."
+}

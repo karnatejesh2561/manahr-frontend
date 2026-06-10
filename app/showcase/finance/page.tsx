@@ -2,11 +2,73 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Download, Plus, TrendingUp, TrendingDown, DollarSign, Receipt, Wallet, ArrowDownRight, ArrowUpRight, FileText } from 'lucide-react';
+import { Download, Plus, TrendingUp, DollarSign, Receipt, Wallet, ArrowDownRight, ArrowUpRight, Filter } from 'lucide-react';
 import DashboardShell from '@/components/showcase/DashboardShell';
-import { AreaChart, BarChart, DonutChart, MultiLineChart, AnimatedNumber, Sparkline } from '@/components/showcase/Charts';
+import { AreaChart, DonutChart, MultiLineChart, AnimatedNumber } from '@/components/showcase/Charts';
+import { Drawer, ConfirmDialog, Field, FilterPanel, FilterChip, RowMenu, useToast } from '@/components/showcase/Interactions';
+
+type Invoice = { id: string; c: string; a: number; s: 'paid' | 'pending' | 'overdue' | 'sent'; due: string };
+
+const colorFor = (s: Invoice['s']) =>
+  s === 'paid' ? '#5cf2a3' : s === 'pending' ? '#ffb547' : s === 'overdue' ? '#ff5e7e' : '#6affe0';
+
+const initial: Invoice[] = [
+  { id: 'INV-2841', c: 'Globex Corp',         a:  12400, s: 'paid',    due: 'Dec 02' },
+  { id: 'INV-2840', c: 'Northwind Traders',   a:  84000, s: 'pending', due: 'Dec 18' },
+  { id: 'INV-2839', c: 'Acme Robotics',       a:  28500, s: 'overdue', due: 'Nov 28' },
+  { id: 'INV-2838', c: 'Initech',             a:   4200, s: 'paid',    due: 'Dec 05' },
+  { id: 'INV-2837', c: 'Vandelay Inc.',       a:  36500, s: 'sent',    due: 'Dec 22' },
+  { id: 'INV-2836', c: 'Stark Industries',    a: 148000, s: 'paid',    due: 'Dec 01' },
+];
+
+const statuses: Invoice['s'][] = ['paid', 'pending', 'sent', 'overdue'];
+
+let serial = 2842;
+const newId = () => 'INV-' + (serial++);
+const blank = () => ({ c: '', a: 0, s: 'sent' as Invoice['s'], due: '' });
 
 export default function FinancePage() {
+  const [list, setList] = React.useState<Invoice[]>(initial);
+  const [filterOpen, setFilterOpen] = React.useState(false);
+  const [statusFilters, setStatusFilters] = React.useState<Invoice['s'][]>([]);
+
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [editing, setEditing] = React.useState<Invoice | null>(null);
+  const [form, setForm] = React.useState(blank());
+  const [confirmDel, setConfirmDel] = React.useState<Invoice | null>(null);
+  const { push } = useToast();
+
+  const filtered = list.filter(inv => statusFilters.length === 0 || statusFilters.includes(inv.s));
+
+  const totalsByStatus = (s: Invoice['s']) => list.filter(x => x.s === s).reduce((acc, x) => acc + x.a, 0);
+
+  const openCreate = () => { setEditing(null); setForm(blank()); setDrawerOpen(true); };
+  const openEdit = (inv: Invoice) => {
+    setEditing(inv);
+    setForm({ c: inv.c, a: inv.a, s: inv.s, due: inv.due });
+    setDrawerOpen(true);
+  };
+  const submit = () => {
+    if (!form.c.trim()) { push('Client name required', 'danger'); return; }
+    if (form.a <= 0) { push('Amount must be > 0', 'danger'); return; }
+    if (editing) {
+      setList(p => p.map(x => x.id === editing.id ? { ...editing, ...form } : x));
+      push(`Updated · ${editing.id}`);
+    } else {
+      const id = newId();
+      setList(p => [{ id, ...form }, ...p]);
+      push(`Invoice created · ${id}`);
+    }
+    setDrawerOpen(false);
+  };
+  const markPaid = (inv: Invoice) => {
+    setList(p => p.map(x => x.id === inv.id ? { ...x, s: 'paid' } : x));
+    push(`${inv.id} marked paid`);
+  };
+  const remove = (inv: Invoice) => { setList(p => p.filter(x => x.id !== inv.id)); push(`Voided · ${inv.id}`, 'info'); };
+
+  const exportPL = () => push('P&L export queued · check downloads in a moment', 'info');
+
   return (
     <DashboardShell
       title="Finance command"
@@ -14,8 +76,11 @@ export default function FinancePage() {
       breadcrumb={['Workspace', 'Finance']}
       actions={
         <>
-          <button className="sc-btn"><Download size={13} />Export P&L</button>
-          <button className="sc-btn sc-btn-primary"><Plus size={13} />New invoice</button>
+          <button className="sc-btn" onClick={() => setFilterOpen(!filterOpen)} data-testid="open-filters">
+            <Filter size={13} />Filter{statusFilters.length > 0 && <span className="sc-chip sc-chip-accent" style={{ padding: '1px 6px', fontSize: 10 }}>{statusFilters.length}</span>}
+          </button>
+          <button className="sc-btn" onClick={exportPL} data-testid="export-pl"><Download size={13} />Export P&L</button>
+          <button className="sc-btn sc-btn-primary" onClick={openCreate} data-testid="new-invoice"><Plus size={13} />New invoice</button>
         </>
       }
     >
@@ -38,8 +103,21 @@ export default function FinancePage() {
         })}
       </div>
 
+      <FilterPanel open={filterOpen}>
+        <span style={{ fontSize: 11, color: 'var(--sc-text-faint)' }}>INVOICE STATUS</span>
+        {statuses.map(s => (
+          <FilterChip key={s} active={statusFilters.includes(s)}
+            onClick={() => setStatusFilters(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s])}
+            testid={`filter-status-${s}`}>{s}</FilterChip>
+        ))}
+        {statusFilters.length > 0 && (
+          <button onClick={() => setStatusFilters([])} className="sc-btn sc-btn-ghost ml-auto"
+                  style={{ padding: '6px 12px', fontSize: 11 }}>Clear filters</button>
+        )}
+      </FilterPanel>
+
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mb-6">
-        <motion.div className="sc-card p-6 xl:col-span-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+        <motion.div className="sc-card p-6 xl:col-span-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <div className="flex justify-between items-start mb-4">
             <div>
               <div className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>P&L · monthly</div>
@@ -54,7 +132,7 @@ export default function FinancePage() {
           ]} />
         </motion.div>
 
-        <motion.div className="sc-card p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
+        <motion.div className="sc-card p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
           <div className="sc-sans mb-4" style={{ fontSize: 14, fontWeight: 600 }}>Expenses by category</div>
           <DonutChart size={200} thickness={20} centerLabel="$482k" centerSubLabel="THIS MONTH" segments={[
             { label: 'Salaries', value: 52, color: '#b6ff3c' },
@@ -63,53 +141,51 @@ export default function FinancePage() {
             { label: 'Office', value: 8, color: '#7a5cff' },
             { label: 'Other', value: 10, color: '#ffb547' },
           ]} />
-          <div className="space-y-2 mt-4 text-xs">
-            {[
-              {l:'Salaries',v:'$250k',c:'#b6ff3c'},
-              {l:'Cloud & infra',v:'$87k',c:'#6affe0'},
-              {l:'Marketing',v:'$58k',c:'#ff6bcb'},
-              {l:'Office',v:'$38k',c:'#7a5cff'},
-              {l:'Other',v:'$49k',c:'#ffb547'},
-            ].map(r => (
-              <div key={r.l} className="flex items-center justify-between">
-                <span className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full" style={{ background: r.c }} />{r.l}</span>
-                <span style={{ fontFamily: 'monospace' }}>{r.v}</span>
-              </div>
-            ))}
-          </div>
         </motion.div>
       </div>
 
-      {/* Invoices + Cashflow */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-6">
-        <motion.div className="sc-card p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}>
+        <motion.div className="sc-card p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <div className="flex justify-between items-start mb-4">
-            <div className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>Recent invoices</div>
-            <button className="sc-btn sc-btn-ghost" style={{ padding: '4px 10px', fontSize: 11 }}>View all</button>
+            <div className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>Invoices ({filtered.length})</div>
+            <div className="flex gap-2 flex-wrap">
+              {statuses.map(s => (
+                <span key={s} className="sc-chip" style={{ fontSize: 10, color: colorFor(s), borderColor: `${colorFor(s)}40`, background: `${colorFor(s)}10` }}>
+                  {s} · ${(totalsByStatus(s)/1000).toFixed(1)}k
+                </span>
+              ))}
+            </div>
           </div>
           <table className="sc-table">
-            <thead><tr><th>INVOICE</th><th>CLIENT</th><th>AMOUNT</th><th>STATUS</th></tr></thead>
+            <thead><tr><th>INVOICE</th><th>CLIENT</th><th>AMOUNT</th><th>DUE</th><th>STATUS</th><th></th></tr></thead>
             <tbody>
-              {[
-                { id: 'INV-2841', c: 'Globex Corp', a: '$12,400', s: 'paid', cl: '#5cf2a3' },
-                { id: 'INV-2840', c: 'Northwind Traders', a: '$84,000', s: 'pending', cl: '#ffb547' },
-                { id: 'INV-2839', c: 'Acme Robotics', a: '$28,500', s: 'overdue', cl: '#ff5e7e' },
-                { id: 'INV-2838', c: 'Initech', a: '$4,200', s: 'paid', cl: '#5cf2a3' },
-                { id: 'INV-2837', c: 'Vandelay Inc.', a: '$36,500', s: 'sent', cl: '#6affe0' },
-                { id: 'INV-2836', c: 'Stark Industries', a: '$148,000', s: 'paid', cl: '#5cf2a3' },
-              ].map((r) => (
-                <tr key={r.id}>
+              {filtered.map((r) => (
+                <tr key={r.id} data-testid={`invoice-row-${r.id}`}>
                   <td style={{ fontFamily: 'monospace', color: 'var(--sc-accent)' }}>{r.id}</td>
                   <td>{r.c}</td>
-                  <td style={{ fontFamily: 'monospace' }}>{r.a}</td>
-                  <td><span className="sc-chip" style={{ color: r.cl, borderColor: `${r.cl}40`, background: `${r.cl}15` }}>{r.s}</span></td>
+                  <td style={{ fontFamily: 'monospace' }}>${r.a.toLocaleString()}</td>
+                  <td style={{ color: 'var(--sc-text-dim)' }}>{r.due}</td>
+                  <td><span className="sc-chip" style={{ color: colorFor(r.s), borderColor: `${colorFor(r.s)}40`, background: `${colorFor(r.s)}15` }}>{r.s}</span></td>
+                  <td>
+                    <RowMenu items={[
+                      { label: 'Edit', onClick: () => openEdit(r) },
+                      ...(r.s !== 'paid' ? [{ label: 'Mark as paid', onClick: () => markPaid(r) }] : []),
+                      { label: 'Send reminder', onClick: () => push(`Reminder sent · ${r.c}`, 'info') },
+                      { label: 'Void invoice', onClick: () => setConfirmDel(r), danger: true },
+                    ]} />
+                  </td>
                 </tr>
               ))}
+              {filtered.length === 0 && (
+                <tr><td colSpan={6} style={{ textAlign: 'center', padding: 32, color: 'var(--sc-text-faint)' }}>
+                  No invoices match.
+                </td></tr>
+              )}
             </tbody>
           </table>
         </motion.div>
 
-        <motion.div className="sc-card p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+        <motion.div className="sc-card p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
           <div className="sc-sans mb-4" style={{ fontSize: 14, fontWeight: 600 }}>Cash flow forecast</div>
           <AreaChart height={200} color="#b6ff3c" color2="#6affe0"
             labels={['W1','W2','W3','W4','W5','W6','W7','W8']}
@@ -131,8 +207,7 @@ export default function FinancePage() {
         </motion.div>
       </div>
 
-      {/* Tax summary */}
-      <motion.div className="sc-card p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
+      <motion.div className="sc-card p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <div className="flex justify-between items-start mb-5">
           <div>
             <div className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>Tax & compliance</div>
@@ -154,6 +229,57 @@ export default function FinancePage() {
           ))}
         </div>
       </motion.div>
+
+      <Drawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        title={editing ? 'Edit invoice' : 'New invoice'}
+        subtitle={editing ? `${editing.id}` : 'Create and send an invoice to a client'}
+        footer={
+          <>
+            <button className="sc-btn sc-btn-ghost" onClick={() => setDrawerOpen(false)}>Cancel</button>
+            <button className="sc-btn sc-btn-primary" onClick={submit} data-testid="drawer-submit">
+              {editing ? 'Save changes' : 'Create & send'}
+            </button>
+          </>
+        }
+      >
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Client" span={2}>
+            <input className="sc-input" value={form.c} onChange={(e) => setForm({ ...form, c: e.target.value })}
+                   placeholder="e.g. Globex Corp" data-testid="invoice-client" autoFocus />
+          </Field>
+          <Field label="Amount (USD)">
+            <input type="number" className="sc-input" value={form.a}
+                   onChange={(e) => setForm({ ...form, a: Number(e.target.value) || 0 })}
+                   data-testid="invoice-amount" />
+          </Field>
+          <Field label="Status">
+            <select className="sc-input" value={form.s} onChange={(e) => setForm({ ...form, s: e.target.value as Invoice['s'] })}>
+              {statuses.map(s => <option key={s}>{s}</option>)}
+            </select>
+          </Field>
+          <Field label="Due date" span={2}>
+            <input className="sc-input" value={form.due} onChange={(e) => setForm({ ...form, due: e.target.value })}
+                   placeholder="e.g. Dec 24" data-testid="invoice-due" />
+          </Field>
+        </div>
+        <div className="mt-6 p-4 rounded-xl" style={{ background: 'rgba(182,255,60,0.04)', border: '1px solid rgba(182,255,60,0.15)' }}>
+          <div className="sc-sans" style={{ fontSize: 12, fontWeight: 600, color: 'var(--sc-accent)' }}>Line items</div>
+          <div style={{ fontSize: 11, color: 'var(--sc-text-dim)', marginTop: 4 }}>
+            Add product or service line items in a follow-up dialog. For demo purposes, the amount above is the total.
+          </div>
+        </div>
+      </Drawer>
+
+      <ConfirmDialog
+        open={!!confirmDel}
+        onClose={() => setConfirmDel(null)}
+        onConfirm={() => confirmDel && remove(confirmDel)}
+        title="Void this invoice?"
+        message={`This will void ${confirmDel?.id} for ${confirmDel?.c}. Funds will not be collectible.`}
+        confirmLabel="Void invoice"
+      />
     </DashboardShell>
   );
 }

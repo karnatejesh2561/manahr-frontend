@@ -5,8 +5,10 @@ import { motion } from 'framer-motion';
 import { Plus, Users, UserPlus, Calendar, TrendingUp, Briefcase } from 'lucide-react';
 import DashboardShell from '@/components/showcase/DashboardShell';
 import { AreaChart, BarChart, DonutChart, RadialGauge, Heatmap, AnimatedNumber, Sparkline } from '@/components/showcase/Charts';
+import { useToast } from '@/components/showcase/Interactions';
 
 export default function HRPage() {
+  const { push } = useToast();
   const heatData = React.useMemo(() =>
     Array.from({ length: 30 * 7 }, (_, i) => {
       // Deterministic pseudo-random — stable between SSR & CSR
@@ -21,8 +23,8 @@ export default function HRPage() {
       breadcrumb={['Workspace', 'People', 'HR Dashboard']}
       actions={
         <>
-          <button className="sc-btn"><Calendar size={13} />Schedule</button>
-          <button className="sc-btn sc-btn-primary"><UserPlus size={13} />Hire</button>
+          <button className="sc-btn" onClick={() => push('Calendar opened in side panel', 'info')}><Calendar size={13} />Schedule</button>
+          <button className="sc-btn sc-btn-primary" onClick={() => push('Hiring flow opens · post on 8 job boards', 'success')}><UserPlus size={13} />Hire</button>
         </>
       }
     >
