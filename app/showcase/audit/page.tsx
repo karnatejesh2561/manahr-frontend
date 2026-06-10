@@ -81,7 +81,7 @@ export default function AuditPage() {
         {allSeverities.map(s => (
           <FilterChip key={s} active={sevFilters.includes(s)}
             onClick={() => setSevFilters(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s])}
-            testid={`filter-sev-${s}`}>{s}</FilterChip>
+            testid={`filter-severity-${s}`}>{s}</FilterChip>
         ))}
         {sevFilters.length > 0 && (
           <button onClick={() => setSevFilters([])} className="sc-btn sc-btn-ghost ml-auto"

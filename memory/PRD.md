@@ -19,6 +19,22 @@ Reference document: **Portfolio_Showcase_Master_Plan.pdf** — 15 phases / 50–
 - **Sales team @ ManaTech** — uses /showcase to walk clients through capabilities.
 
 ## What's implemented (Jan 2026)
+
+### Iteration 2 — Interactive dashboards (Jan 2026)
+- **`components/showcase/Interactions.tsx`** — new shared interaction kit: `Drawer` (slide from right), `ConfirmDialog`, `FilterPanel`, `FilterChip`, `RowMenu`, `SearchInput`, `ToastProvider`/`useToast`, `Field` form field. ToastProvider mounted once in `app/showcase/layout.tsx`.
+- **CRM** — Filters (Stage / Owner / Min value chips), Search, Add deal drawer, Edit deal (via row menu or kanban card click), Mark as won, Delete with confirm. KPIs (Pipeline, Open, Win rate) recompute from state.
+- **Employees** — Filters (Department / Status), Search, Grid/List toggle, Add employee drawer, Edit, Remove with confirm. Per-card row menu.
+- **Users & Roles** — Filters (Role / Status / MFA-only), Invite user drawer, Edit, Enable/Disable MFA, Suspend/Reactivate, Remove.
+- **Inventory** — Filters (Category / Low-stock-only), Add product drawer, Re-order via confirm dialog (auto adds qty to stock, item disappears from critical list).
+- **Finance** — Filter by invoice status, New invoice drawer, Mark as paid, Send reminder, Void with confirm.
+- **Audit log** — Severity filter chips (`filter-severity-*`), Export CSV → toast, Investigate button auto-filters to critical.
+- **Projects** — Filters (Priority / Assignee), New task drawer with column pre-selection, Move-to-column actions, Delete confirm. Each kanban column has an inline "+ Add task" button.
+- **Executive** — Export and AI Summary buttons now fire toasts.
+- **Settings** — Save changes button fires a toast.
+
+### Iteration 1 — Initial showcase build
+**Showcase entry**
+- `/showcase` — index landing with hero, stats strip, 12-card screen grid (each card has live mini-chart preview)
 **Showcase entry**
 - `/showcase` — index landing with hero, stats strip, 12-card screen grid (each card has live mini-chart preview)
 
