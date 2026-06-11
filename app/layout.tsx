@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Urbanist } from 'next/font/google';
 import './globals.css';
 import MarketingChrome from '@/components/MarketingChrome';
 
-const inter = Inter({ subsets: ['latin'] });
+const urbanist = Urbanist({ subsets: ['latin'], weight: ['400','600','700'] });
 
 export const metadata: Metadata = {
   title: 'ManaTech | Premium SaaS & Digital Solutions',
@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={urbanist.className} style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
         <MarketingChrome>{children}</MarketingChrome>
       </body>
     </html>

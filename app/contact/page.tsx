@@ -18,7 +18,7 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Create mailto link with form data
     const subject = encodeURIComponent(`New Contact from ${formData.name}${formData.company ? ` - ${formData.company}` : ''}`);
     const body = encodeURIComponent(
@@ -27,7 +27,7 @@ export default function ContactPage() {
       `Company: ${formData.company || 'N/A'}\n\n` +
       `Message:\n${formData.message}`
     );
-    
+
     // Open default email client
     window.location.href = `mailto:manatech.services.official@gmail.com?subject=${subject}&body=${body}`;
   };
@@ -42,14 +42,14 @@ export default function ContactPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h1 className="text-5xl sm:text-6xl font-bold mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6">
             Get in{' '}
             <span className="font-extrabold">
               Touch
             </span>
           </h1>
-          <p className="text-xl text-black/70 max-w-2xl mx-auto">
-            Ready to start your project? Let's discuss how we can help 
+          <p className="text-lg sm:text-xl text-black/70 max-w-2xl mx-auto px-4">
+            Ready to start your project? Let's discuss how we can help
             transform your vision into reality.
           </p>
         </motion.div>
@@ -61,9 +61,9 @@ export default function ContactPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="glass rounded-[2.5rem] p-8 sm:p-12 border border-white/20">
-              <h2 className="text-2xl font-bold mb-6 text-black">Send us a Message</h2>
-              
+            <div className="glass rounded-[2.5rem] p-6 sm:p-8 lg:p-12 border border-white/20">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-black">Send us a Message</h2>
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-black mb-2">
@@ -148,9 +148,9 @@ export default function ContactPage() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="space-y-8"
           >
-            <div className="glass rounded-[2.5rem] p-8 sm:p-12 border border-white/20">
-              <h2 className="text-2xl font-bold mb-8 text-black">Contact Information</h2>
-              
+            <div className="glass rounded-[2.5rem] p-6 sm:p-8 lg:p-12 border border-white/20">
+              <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-black">Contact Information</h2>
+
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center flex-shrink-0">

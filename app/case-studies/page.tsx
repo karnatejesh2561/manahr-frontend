@@ -35,13 +35,13 @@ export default function CaseStudiesPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <h1 className="text-5xl sm:text-6xl font-bold mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6">
             Your{' '}
             <span className="font-extrabold">
               Opportunity
             </span>
           </h1>
-          <p className="text-xl text-black/70 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-black/70 max-w-3xl mx-auto px-4">
             Be our first client and get premium development services at startup-friendly rates.
           </p>
         </motion.div>
@@ -56,7 +56,7 @@ export default function CaseStudiesPage() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group"
             >
-              <div className="glass rounded-[2.5rem] p-8 sm:p-12 border border-white/20 hover:border-black/30 transition-all duration-300 hover:shadow-xl">
+              <div className="glass rounded-[2.5rem] p-6 sm:p-8 lg:p-12 border border-white/20 hover:border-black/30 transition-all duration-300 hover:shadow-xl">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start mb-8 gap-4">
                   <div>

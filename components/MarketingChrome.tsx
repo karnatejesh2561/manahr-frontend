@@ -7,7 +7,7 @@ import BackgroundEffects from './BackgroundEffects';
 
 export default function MarketingChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isShowcase = pathname?.startsWith('/showcase');
+  const isShowcase = pathname?.startsWith('/demos');
 
   if (isShowcase) {
     return <>{children}</>;

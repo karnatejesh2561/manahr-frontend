@@ -1,35 +1,36 @@
 @import "tailwindcss";
 
+/* Theme custom properties */
 @theme {
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-20px); }
   }
-  
-  --animate-float: float 6s ease-in-out infinite;
 }
 
+/* Base styles */
 @layer base {
   body {
     @apply bg-white text-black;
+    font-family: 'Urbanist', system-ui, sans-serif;
   }
 }
 
+/* Utility classes */
 @layer utilities {
   .glass {
     @apply bg-white/40 backdrop-blur-lg border border-black/20;
   }
-  
+
   .glow {
     /* box-shadow removed */
   }
-  
+
   .noise {
     position: relative;
   }
-  
+
   .noise::before {
     content: '';
     position: absolute;
@@ -39,4 +40,37 @@
     pointer-events: none;
   }
 }
+
+/* Global design tokens */
+:root {
+  --card-width: clamp(200px, 30vw, 300px);
+  --card-height: auto;
+  --card-padding: 0.75rem;
+  /* Responsive tokens */
+  --font-base: 16px;
+  --font-sm: 14px;
+  --font-xs: 12px;
+  --spacing-base: 1rem;
+  --spacing-sm: 0.75rem;
+  --spacing-xs: 0.5rem;
+}
+
+/* Base font size using responsive token */
+body {
+  font-size: var(--font-base);
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  :root {
+    --card-padding: 0.5rem;
+    --font-base: 14px;
+    --font-sm: 13px;
+    --font-xs: 12px;
+    --spacing-base: 0.75rem;
+    --spacing-sm: 0.5rem;
+    --spacing-xs: 0.25rem;
+  }
+}
+
 

@@ -99,7 +99,7 @@ const AboutSection: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl mx-auto"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto"
         >
           {[
             { label: 'Launch Date', value: 'Mar 2026' },
@@ -112,11 +112,11 @@ const AboutSection: React.FC = () => {
                 whileInView={{ scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                className="text-4xl sm:text-5xl font-bold text-black mb-2"
+                className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-2"
               >
                 {stat.value}
               </motion.div>
-              <p className="text-slate/70">{stat.label}</p>
+              <p className="text-sm sm:text-base text-slate/70">{stat.label}</p>
             </div>
           ))}
         </motion.div>

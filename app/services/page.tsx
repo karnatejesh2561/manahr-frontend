@@ -114,14 +114,14 @@ export default function ServicesPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <h1 className="text-5xl sm:text-6xl font-bold mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6">
             Our{' '}
             <span className="font-extrabold">
               Services
             </span>
           </h1>
-          <p className="text-xl text-black/70 max-w-3xl mx-auto">
-            Comprehensive digital solutions designed to transform your business. 
+          <p className="text-lg sm:text-xl text-black/70 max-w-3xl mx-auto px-4">
+            Comprehensive digital solutions designed to transform your business.
             Let's start building together.
           </p>
         </motion.div>
@@ -141,16 +141,16 @@ export default function ServicesPage() {
               >
                 <div className="glass rounded-3xl p-8 h-full border border-white/20 hover:border-black/30 transition-all duration-300">
                   <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 glow`} />
-                  
+
                   <div className="relative z-10">
                     <div className={`w-16 h-16 rounded-2xl bg-black flex items-center justify-center mb-6`}>
                       <Icon size={32} className="text-white" />
                     </div>
-                    
+
                     <h3 className="text-2xl font-bold mb-3 text-black transition-colors">
                       {service.title}
                     </h3>
-                    
+
                     <p className="text-black/70 mb-6 leading-relaxed">
                       {service.description}
                     </p>

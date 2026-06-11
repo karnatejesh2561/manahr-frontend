@@ -26,7 +26,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight"
         >
           We Build{' '}
           <span className="font-extrabold">
@@ -41,7 +41,7 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-lg sm:text-xl text-black/70 mb-12 max-w-3xl mx-auto"
         >
-          Transform your vision into reality with cutting-edge technology, 
+          Transform your vision into reality with cutting-edge technology,
           premium design, and enterprise-grade architecture.
         </motion.p>
 
@@ -61,7 +61,7 @@ const Hero: React.FC = () => {
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </motion.button>
           </Link>
-          
+
           <Link href="/case-studies">
             <motion.button
               whileHover={{ scale: 1.05 }}

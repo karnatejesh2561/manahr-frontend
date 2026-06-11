@@ -18,12 +18,12 @@ const CTASection: React.FC = () => {
         >
           {/* Solid Background */}
           <div className="absolute inset-0 bg-black opacity-90" />
-          
+
           {/* Noise Texture */}
           <div className="absolute inset-0 noise opacity-20" />
-          
+
           {/* Content */}
-          <div className="relative px-8 sm:px-12 py-16 sm:py-20 text-center text-white">
+          <div className="relative px-6 sm:px-12 py-12 sm:py-16 lg:py-20 text-center text-white">
             <motion.div
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
@@ -42,7 +42,7 @@ const CTASection: React.FC = () => {
             </h2>
 
             <p className="text-lg sm:text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-              Partner with us to create innovative solutions that drive growth 
+              Partner with us to create innovative solutions that drive growth
               and exceed expectations.
             </p>
 
@@ -57,7 +57,7 @@ const CTASection: React.FC = () => {
                   <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </motion.button>
               </Link>
-              
+
               <Link href="/services">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -83,7 +83,7 @@ const CTASection: React.FC = () => {
               ease: 'easeInOut',
             }}
           />
-          
+
           <motion.div
             className="absolute bottom-10 left-10 w-40 h-40 rounded-full bg-white/10 blur-2xl"
             animate={{

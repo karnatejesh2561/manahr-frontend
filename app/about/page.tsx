@@ -78,14 +78,14 @@ export default function AboutPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <h1 className="text-5xl sm:text-6xl font-bold mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6">
             About{' '}
             <span className="font-extrabold">
               ManaTech
             </span>
           </h1>
-          <p className="text-xl text-black/70 max-w-3xl mx-auto">
-            A fresh team of passionate developers eager to build 
+          <p className="text-lg sm:text-xl text-black/70 max-w-3xl mx-auto px-4">
+            A fresh team of passionate developers eager to build
             exceptional digital solutions.
           </p>
         </motion.div>
@@ -95,23 +95,23 @@ export default function AboutPage() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="glass rounded-[2.5rem] p-8 sm:p-12 mb-16 border border-white/20"
+          className="glass rounded-[2.5rem] p-6 sm:p-8 lg:p-12 mb-16 border border-white/20"
         >
-          <h2 className="text-3xl font-bold mb-6 text-black">Our Story</h2>
-          <div className="space-y-4 text-black/70 leading-relaxed text-lg">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-black">Our Story</h2>
+          <div className="space-y-4 text-black/70 leading-relaxed text-base sm:text-lg">
             <p>
-              ManaTech launched in March 2026 with a clear mission: to help businesses leverage 
-              cutting-edge technology to achieve their goals. We believe that great software should 
+              ManaTech launched in March 2026 with a clear mission: to help businesses leverage
+              cutting-edge technology to achieve their goals. We believe that great software should
               be accessible, scalable, and built with care.
             </p>
             <p>
-              We're a team of passionate developers who have worked on enterprise projects and 
-              now want to build our own success story—starting with yours. We bring fresh 
+              We're a team of passionate developers who have worked on enterprise projects and
+              now want to build our own success story—starting with yours. We bring fresh
               perspectives, modern tech stacks, and an eagerness to prove ourselves.
             </p>
             <p>
-              Our team is small by design. This allows us to maintain high quality, 
-              stay agile, and give each project the attention it deserves. We're not 
+              Our team is small by design. This allows us to maintain high quality,
+              stay agile, and give each project the attention it deserves. We're not
               just developers—we're partners in your success.
             </p>
           </div>
@@ -123,7 +123,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-3xl font-bold text-center mb-12"
+            className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12"
           >
             Our{' '}
             <span className="font-extrabold">
@@ -160,7 +160,7 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl font-bold text-center mb-12"
+            className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12"
           >
             Meet the{' '}
             <span className="font-extrabold">
@@ -201,9 +201,9 @@ export default function AboutPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="glass rounded-[2.5rem] p-12 border border-white/20"
+          className="glass rounded-[2.5rem] p-6 sm:p-8 lg:p-12 border border-white/20"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
             {[
               { label: 'Founded', value: 'Mar 2026' },
               { label: 'Team Members', value: '6' },
