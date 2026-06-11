@@ -33,15 +33,14 @@ const Navbar: React.FC = () => {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass shadow-lg' : 'bg-white/80 backdrop-blur-sm'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass shadow-lg' : 'bg-white/80 backdrop-blur-sm'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-16 sm:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <Logo width={160} height={42} />
+            <Logo width={150} height={40} />
           </Link>
 
           {/* Desktop Navigation */}
@@ -52,9 +51,8 @@ const Navbar: React.FC = () => {
                 href={link.href}
                 className="relative group"
               >
-                <span className={`text-sm font-medium transition-colors ${
-                  pathname === link.href ? 'text-black font-bold' : 'text-black/70 hover:text-black'
-                }`}>
+                <span className={`text-sm font-medium transition-colors ${pathname === link.href ? 'text-black font-bold' : 'text-black/70 hover:text-black'
+                  }`}>
                   {link.name}
                 </span>
                 <motion.div
@@ -105,7 +103,7 @@ const Navbar: React.FC = () => {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden glass border-t border-white/20"
           >
-            <div className="px-4 py-6 space-y-4">
+            <div className="px-4 sm:px-6 py-6 sm:py-8 space-y-2 sm:space-y-4">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.name}
@@ -116,9 +114,8 @@ const Navbar: React.FC = () => {
                   <Link
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={`block py-2 text-lg font-medium transition-colors ${
-                      pathname === link.href ? 'text-black font-bold' : 'text-black/70 hover:text-black'
-                    }`}
+                    className={`block py-3 sm:py-2 text-base sm:text-lg font-medium transition-colors rounded-lg px-4 -mx-4 sm:-mx-6 hover:bg-black/5 ${pathname === link.href ? 'text-black font-bold' : 'text-black/70 hover:text-black'
+                      }`}
                   >
                     {link.name}
                   </Link>
@@ -128,9 +125,10 @@ const Navbar: React.FC = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: navLinks.length * 0.1 }}
+                className="pt-2"
               >
                 <a href="mailto:manatech.services.official@gmail.com?subject=Book a Call Request&body=Hi, I would like to schedule a call to discuss my project." onClick={() => setIsOpen(false)}>
-                  <button className="w-full px-6 py-3 bg-black text-white font-semibold rounded-full glow">
+                  <button className="w-full px-6 py-3.5 sm:py-3 bg-black text-white font-semibold rounded-full glow text-base sm:text-sm">
                     Book a Call
                   </button>
                 </a>

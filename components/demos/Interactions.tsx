@@ -48,16 +48,16 @@ export function Drawer({
             transition={{ type: 'spring', stiffness: 320, damping: 32 }}
             data-testid="drawer"
           >
-            <div className="flex items-start justify-between p-6 border-b" style={{ borderColor: 'var(--sc-border)' }}>
+            <div className="flex items-start justify-between p-4 sm:p-6 border-b" style={{ borderColor: 'var(--sc-border)' }}>
               <div>
-                <div className="sc-display" style={{ fontSize: 26, lineHeight: 1.1 }}>{title}</div>
-                {subtitle && <div style={{ fontSize: 12, color: 'var(--sc-text-faint)', marginTop: 6 }}>{subtitle}</div>}
+                <div className="sc-display" style={{ fontSize: 22, lineHeight: 1.1 }}>{title}</div>
+                {subtitle && <div style={{ fontSize: 11, color: 'var(--sc-text-faint)', marginTop: 4 }}>{subtitle}</div>}
               </div>
               <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/5" data-testid="drawer-close">
                 <X size={16} />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto sc-scroll p-6">{children}</div>
+            <div className="flex-1 overflow-y-auto sc-scroll p-4 sm:p-6">{children}</div>
             {footer && (
               <div className="border-t p-4 flex justify-end gap-2" style={{ borderColor: 'var(--sc-border)' }}>
                 {footer}
@@ -234,7 +234,7 @@ export function RowMenu({
 
 /* ---------- Toast / Snackbar ---------- */
 type Toast = { id: number; msg: string; tone?: 'success' | 'info' | 'danger' };
-const ToastCtx = React.createContext<{ push: (m: string, tone?: Toast['tone']) => void }>({ push: () => {} });
+const ToastCtx = React.createContext<{ push: (m: string, tone?: Toast['tone']) => void }>({ push: () => { } });
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = React.useState<Toast[]>([]);

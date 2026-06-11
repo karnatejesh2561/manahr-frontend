@@ -34,13 +34,13 @@ export default function ForgotPage() {
       <div className="sc-grid-texture" />
 
       <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-        <motion.div className="sc-card w-full max-w-md p-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        <motion.div className="sc-card w-full max-w-md p-6 sm:p-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <Link href="/demos/auth/login" className="inline-flex items-center gap-1 text-xs" style={{ color: 'var(--sc-text-dim)' }} data-testid="back-to-login">
             <ArrowLeft size={12} /> Back to sign in
           </Link>
 
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center mt-6 mb-6 sc-ring"
-               style={{ background: 'rgba(122,92,255,0.12)', border: '1px solid rgba(122,92,255,0.3)' }}>
+            style={{ background: 'rgba(122,92,255,0.12)', border: '1px solid rgba(122,92,255,0.3)' }}>
             <Mail size={22} style={{ color: 'var(--sc-accent-4)' }} />
           </div>
 

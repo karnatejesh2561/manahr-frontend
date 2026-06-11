@@ -8,18 +8,18 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="bg-black text-white relative overflow-hidden">
-      
+
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
-          <div className="md:col-span-2">
-            <div className="mb-4">
-              <Logo width={160} height={42} />
+          <div className="sm:col-span-2 text-center sm:text-left">
+            <div className="mb-4 flex justify-center sm:justify-start">
+              <Logo width={150} height={40} />
             </div>
-            <p className="text-white/70 mb-6 max-w-md">
+            <p className="text-white/70 mb-6 max-w-md mx-auto sm:mx-0">
               Building scalable SaaS platforms and intelligent digital solutions for modern businesses.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 justify-center sm:justify-start">
               <a href="#" className="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
                 <Linkedin size={20} />
               </a>
@@ -36,9 +36,9 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="text-center sm:text-left">
             <h3 className="font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-white/70">
+            <ul className="space-y-3 sm:space-y-2 text-white/70">
               <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
               <li><Link href="/services" className="hover:text-white transition-colors">Services</Link></li>
               <li><Link href="/case-studies" className="hover:text-white transition-colors">Case Studies</Link></li>
@@ -47,11 +47,11 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Contact */}
-          <div>
+          <div className="text-center sm:text-left">
             <h3 className="font-semibold mb-4">Get in Touch</h3>
-            <ul className="space-y-2 text-white/70">
+            <ul className="space-y-3 sm:space-y-2 text-white/70">
               <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
-              <li><a href="mailto:manatech.services.official@gmail.com" className="hover:text-white transition-colors">manatech.services.official@gmail.com</a></li>
+              <li><a href="mailto:manatech.services.official@gmail.com" className="hover:text-white transition-colors break-all">manatech.services.official@gmail.com</a></li>
             </ul>
           </div>
         </div>

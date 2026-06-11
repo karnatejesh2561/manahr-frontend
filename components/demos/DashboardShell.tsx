@@ -79,7 +79,7 @@ export default function DashboardShell({
                 {/* Close button inside sidebar on mobile */}
                 <button
                     onClick={() => setIsSidebarOpen(false)}
-                    className="md-hidden-toggle p-1.5 rounded-lg hover:bg-black/10 transition"
+                    className="md:hidden p-1.5 rounded-lg hover:bg-black/10 transition"
                     aria-label="Close sidebar"
                 >
                     <X size={18} />
@@ -209,32 +209,32 @@ export default function DashboardShell({
 
                         {/* Mobile topbar */}
                         <div className="sc-topbar-mobile flex items-center justify-between px-4 py-3">
-    {/* Center brand */}
-    <Link href="/demos" className="flex items-center gap-2">
-        <div className="w-7 h-7 rounded-lg flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, var(--sc-accent), var(--sc-accent-2))' }}>
-            <span style={{ color: '#0a0a0f', fontWeight: 800, fontSize: 12 }}>M</span>
-        </div>
-        <span className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>ManaTech</span>
-    </Link>
+                            {/* Center brand */}
+                            <Link href="/demos" className="flex items-center gap-2">
+                                <div className="w-7 h-7 rounded-lg flex items-center justify-center"
+                                    style={{ background: 'linear-gradient(135deg, var(--sc-accent), var(--sc-accent-2))' }}>
+                                    <span style={{ color: '#0a0a0f', fontWeight: 800, fontSize: 12 }}>M</span>
+                                </div>
+                                <span className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>ManaTech</span>
+                            </Link>
 
-    {/* Right side: toggle button, notifications, avatar */}
-    <div className="flex items-center gap-2">
-        <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="p-2 rounded-xl hover:bg-black/10 transition"
-            aria-label="Open menu"
-            data-testid="mobile-menu-btn"
-        >
-            <Menu size={20} />
-        </button>
-        <button className="relative p-2 rounded-xl hover:bg-black/5 transition" data-testid="notifications-btn-mobile">
-            <Bell size={18} />
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full" style={{ background: 'var(--sc-accent-3)' }} />
-        </button>
-        <div className="sc-avatar" style={{ background: 'linear-gradient(135deg, #ffb547, #ff6bcb)', width: 30, height: 30, fontSize: 11 }}>AS</div>
-    </div>
-</div>
+                            {/* Right side: toggle button, notifications, avatar */}
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setIsSidebarOpen(true)}
+                                    className="p-2 rounded-xl hover:bg-black/10 transition"
+                                    aria-label="Open menu"
+                                    data-testid="mobile-menu-btn"
+                                >
+                                    <Menu size={20} />
+                                </button>
+                                <button className="relative p-2 rounded-xl hover:bg-black/5 transition" data-testid="notifications-btn-mobile">
+                                    <Bell size={18} />
+                                    <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full" style={{ background: 'var(--sc-accent-3)' }} />
+                                </button>
+                                <div className="sc-avatar" style={{ background: 'linear-gradient(135deg, #ffb547, #ff6bcb)', width: 30, height: 30, fontSize: 11 }}>AS</div>
+                            </div>
+                        </div>
 
                         {/* Desktop topbar */}
                         <div className="sc-topbar-desktop flex items-center gap-4 px-8 py-4">

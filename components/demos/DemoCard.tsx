@@ -23,7 +23,6 @@ export default function DemoCard({ href, title, desc, icon: Icon, accent, previe
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.05 }}
-        style={{ height: '360px' }}
       >
         {/* Browser Top Bar */}
         <div className="bg-[#f5f5f5] border-b border-neutral-200 px-3 py-2 flex items-center gap-4">

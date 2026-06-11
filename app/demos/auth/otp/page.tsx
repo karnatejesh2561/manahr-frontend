@@ -42,13 +42,13 @@ export default function OTPPage() {
       <div className="sc-grid-texture" />
 
       <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-        <motion.div className="sc-card w-full max-w-md p-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        <motion.div className="sc-card w-full max-w-md p-6 sm:p-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <Link href="/demos/auth/forgot" className="inline-flex items-center gap-1 text-xs" style={{ color: 'var(--sc-text-dim)' }}>
             <ArrowLeft size={12} /> Back
           </Link>
 
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center mt-6 mb-6 sc-ring"
-               style={{ background: 'rgba(182,255,60,0.12)', border: '1px solid rgba(182,255,60,0.3)' }}>
+            style={{ background: 'rgba(182,255,60,0.12)', border: '1px solid rgba(182,255,60,0.3)' }}>
             <Shield size={22} style={{ color: 'var(--sc-accent)' }} />
           </div>
 
@@ -57,7 +57,7 @@ export default function OTPPage() {
             We sent a 6-digit code to <strong style={{ color: 'var(--sc-text)' }}>akira@manatech.io</strong>. Enter it below to continue.
           </p>
 
-          <div className="flex gap-2 justify-between mt-7" data-testid="otp-grid">
+          <div className="flex gap-1.5 sm:gap-2 justify-between mt-7" data-testid="otp-grid">
             {vals.map((v, i) => (
               <input
                 key={i}
@@ -66,8 +66,8 @@ export default function OTPPage() {
                 onChange={(e) => update(i, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
                 maxLength={1}
-                className={`sc-input text-center ${error ? 'sc-input-error' : ''}`}
-                style={{ width: 48, height: 56, fontSize: 22, fontFamily: 'Instrument Serif, serif' }}
+                className={`sc-input text-center flex-1 ${error ? 'sc-input-error' : ''}`}
+                style={{ maxWidth: 48, height: 52, fontSize: 22, fontFamily: 'Instrument Serif, serif' }}
                 data-testid={`otp-digit-${i}`}
               />
             ))}

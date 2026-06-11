@@ -135,14 +135,14 @@ export default function DemosIndex() {
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-sans" data-testid="demos-index">
       {/* Light Grid texture */}
-      <div className="fixed inset-0 pointer-events-none z-0" style={{ 
+      <div className="fixed inset-0 pointer-events-none z-0" style={{
         backgroundImage: 'linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)',
         backgroundSize: '64px 64px',
         maskImage: 'radial-gradient(ellipse 80% 60% at 50% 30%, #000 30%, transparent 90%)'
       }} />
 
       {/* Top bar */}
-      <header className="relative z-10 flex items-center justify-between px-6 lg:px-12 py-5 border-b border-neutral-200 bg-white/80 backdrop-blur-md">
+      <header className="relative z-10 flex items-center justify-between px-4 sm:px-6 lg:px-12 py-4 sm:py-5 border-b border-neutral-200 bg-white/80 backdrop-blur-md">
         <Link href="/" className="flex items-center gap-3" data-testid="back-to-site">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-neutral-900 shadow-sm">
             <span className="text-white font-bold text-sm">M</span>
@@ -162,10 +162,10 @@ export default function DemosIndex() {
 
       <SectionHeader />
       <DemoGrid screens={screens} />
-      
+
       {/* Footer */}
-      <footer className="relative z-10 border-t border-neutral-200 mt-10 px-6 lg:px-12 py-10 max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-        <div className="text-xs text-neutral-400">
+      <footer className="relative z-10 border-t border-neutral-200 mt-10 px-4 sm:px-6 lg:px-12 py-8 sm:py-10 max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="text-xs text-neutral-400 text-center sm:text-left">
           © 2026 ManaTech · Crafted with obsession in 4 timezones.
         </div>
         <div className="flex items-center gap-4 text-xs font-medium text-neutral-500">

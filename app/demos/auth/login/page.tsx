@@ -40,7 +40,7 @@ export default function LoginPage() {
         <div className="hidden lg:flex flex-col justify-between p-12 border-r" style={{ borderColor: 'var(--sc-border)' }}>
           <Link href="/demos" className="flex items-center gap-3" data-testid="brand-link">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-                 style={{ background: 'linear-gradient(135deg, var(--sc-accent), var(--sc-accent-2))' }}>
+              style={{ background: 'linear-gradient(135deg, var(--sc-accent), var(--sc-accent-2))' }}>
               <span style={{ color: '#0a0a0f', fontWeight: 800 }}>M</span>
             </div>
             <div className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>ManaTech Cloud</div>
@@ -85,30 +85,30 @@ export default function LoginPage() {
         </div>
 
         {/* Right form side */}
-        <div className="flex items-center justify-center p-8">
+        <div className="flex items-center justify-center p-4 sm:p-8">
           <motion.div
             className="w-full max-w-md"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           >
-            <div className="lg:hidden mb-8">
+            <div className="lg:hidden mb-6 sm:mb-8">
               <Link href="/demos" className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                     style={{ background: 'var(--sc-accent)' }}>
+                  style={{ background: 'var(--sc-accent)' }}>
                   <span style={{ color: '#0a0a0f', fontWeight: 800 }}>M</span>
                 </div>
                 <span className="sc-sans" style={{ fontWeight: 600 }}>ManaTech</span>
               </Link>
             </div>
 
-            <h2 className="sc-display" style={{ fontSize: 40 }}>Sign in</h2>
+            <h2 className="sc-display" style={{ fontSize: 32 }}>Sign in</h2>
             <p style={{ color: 'var(--sc-text-dim)', fontSize: 13, marginTop: 6 }}>
               New here? <Link href="/demos/auth/register" className="underline" style={{ color: 'var(--sc-accent)' }} data-testid="register-link">Create an account</Link>
             </p>
 
             {/* SSO row */}
-            <div className="grid grid-cols-2 gap-3 mt-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-8">
               <button className="sc-btn justify-center" data-testid="sso-google">
-                <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#fff" d="M12 11v3.2h7.2c-.3 2-2.3 5.8-7.2 5.8-4.3 0-7.9-3.6-7.9-8s3.6-8 7.9-8c2.5 0 4.1 1 5.1 2l3.4-3.3C18.4 1.6 15.5 0 12 0 5.4 0 0 5.4 0 12s5.4 12 12 12c6.9 0 11.5-4.9 11.5-11.7 0-.8-.1-1.4-.2-2H12z"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#fff" d="M12 11v3.2h7.2c-.3 2-2.3 5.8-7.2 5.8-4.3 0-7.9-3.6-7.9-8s3.6-8 7.9-8c2.5 0 4.1 1 5.1 2l3.4-3.3C18.4 1.6 15.5 0 12 0 5.4 0 0 5.4 0 12s5.4 12 12 12c6.9 0 11.5-4.9 11.5-11.7 0-.8-.1-1.4-.2-2H12z" /></svg>
                 Google
               </button>
               <button className="sc-btn justify-center" data-testid="sso-github">
