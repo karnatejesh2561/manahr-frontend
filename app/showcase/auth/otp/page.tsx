@@ -2,17 +2,38 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Shield, ArrowRight } from 'lucide-react';
+import { ScFormError } from '@/components/showcase/FormFields';
 
 export default function OTPPage() {
+  const router = useRouter();
   const [vals, setVals] = React.useState(['', '', '', '', '', '']);
+  const [error, setError] = React.useState('');
   const refs = React.useRef<(HTMLInputElement | null)[]>([]);
 
   const update = (i: number, v: string) => {
     if (!/^\d?$/.test(v)) return;
+    setError('');
     const next = [...vals]; next[i] = v; setVals(next);
     if (v && i < 5) refs.current[i + 1]?.focus();
+  };
+
+  const handleKeyDown = (i: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && !vals[i] && i > 0) {
+      refs.current[i - 1]?.focus();
+    }
+  };
+
+  const handleVerify = () => {
+    const code = vals.join('');
+    if (code.length < 6) {
+      setError('Please enter all 6 verification digits');
+      return;
+    }
+    console.log('OTP Verified:', code);
+    router.push('/showcase');
   };
 
   return (
@@ -43,20 +64,25 @@ export default function OTPPage() {
                 ref={(el) => { refs.current[i] = el; }}
                 value={v}
                 onChange={(e) => update(i, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(i, e)}
                 maxLength={1}
-                className="sc-input text-center"
+                className={`sc-input text-center ${error ? 'sc-input-error' : ''}`}
                 style={{ width: 48, height: 56, fontSize: 22, fontFamily: 'Instrument Serif, serif' }}
                 data-testid={`otp-digit-${i}`}
               />
             ))}
           </div>
 
-          <button className="sc-btn sc-btn-primary w-full justify-center mt-7" data-testid="verify-otp">
+          <div className="mt-2">
+            <ScFormError error={error} />
+          </div>
+
+          <button onClick={handleVerify} className="sc-btn sc-btn-primary w-full justify-center mt-7" data-testid="verify-otp">
             Verify code <ArrowRight size={14} />
           </button>
 
           <div className="mt-6 text-center" style={{ fontSize: 12, color: 'var(--sc-text-faint)' }}>
-            Code expires in <span style={{ color: 'var(--sc-accent)', fontFamily: 'monospace' }}>14:32</span> · <button className="underline">Resend</button>
+            Code expires in <span style={{ color: 'var(--sc-accent)', fontFamily: 'monospace' }}>14:32</span> · <button className="underline" onClick={() => setVals(['', '', '', '', '', ''])}>Resend</button>
           </div>
         </motion.div>
       </div>

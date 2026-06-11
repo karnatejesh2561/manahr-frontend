@@ -3,32 +3,37 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+type FilledBox = { row: number; col: number; duration: number; delay: number };
+
 const BackgroundEffects: React.FC = () => {
-  // Generate random filled boxes with spacing
-  const gridSize = 50; // Size of each grid cell
-  const minGap = 3; // Minimum gap between filled boxes (in grid cells)
-  const [filledBoxes, setFilledBoxes] = React.useState<Array<{row: number, col: number}>>([]);
-  
+  const gridSize = 50;
+  const minGap = 3;
+  // Start as null so nothing renders on the server (avoids SSR/client mismatch entirely)
+  const [filledBoxes, setFilledBoxes] = React.useState<FilledBox[] | null>(null);
+
   React.useEffect(() => {
-    const boxes: Array<{row: number, col: number}> = [];
+    const boxes: FilledBox[] = [];
     const cols = Math.ceil(window.innerWidth / gridSize);
     const rows = Math.ceil(window.innerHeight / gridSize);
-    
-    // Helper function to check if a position is far enough from existing boxes
-    const isFarEnough = (row: number, col: number) => {
-      return boxes.every(box => {
+
+    const isFarEnough = (row: number, col: number) =>
+      boxes.every((box) => {
         const distance = Math.sqrt(
           Math.pow(box.row - row, 2) + Math.pow(box.col - col, 2)
         );
         return distance >= minGap;
       });
-    };
-    
-    // Fill boxes randomly while maintaining minimum gap
+
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
         if (Math.random() < 0.12 && isFarEnough(row, col)) {
-          boxes.push({ row, col });
+          // Pre-compute random values here (client-only) so they never run at render time
+          boxes.push({
+            row,
+            col,
+            duration: 4 + Math.random() * 3,
+            delay: Math.random() * 2,
+          });
         }
       }
     }
@@ -39,23 +44,27 @@ const BackgroundEffects: React.FC = () => {
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
       {/* Grid Pattern */}
       <div className="absolute inset-0 opacity-[0.015]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `linear-gradient(#000000 1px, transparent 1px), linear-gradient(90deg, #000000 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
-        }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `linear-gradient(#000000 1px, transparent 1px), linear-gradient(90deg, #000000 1px, transparent 1px)`,
+            backgroundSize: '50px 50px',
+          }}
+        />
       </div>
 
-      {/* Filled Grid Boxes */}
+      {/* Filled Grid Boxes — only rendered after client hydration */}
       <div className="absolute inset-0">
-        {filledBoxes.map((box, index) => (
+        {filledBoxes?.map((box, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0 }}
             animate={{ opacity: [0.03, 0.06, 0.03] }}
             transition={{
-              duration: 4 + Math.random() * 3,
+              // Safe: these values were computed in useEffect, not at render time
+              duration: box.duration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: box.delay,
             }}
             className="absolute bg-black"
             style={{
