@@ -5,6 +5,10 @@ import { motion } from 'framer-motion';
 import { Building2, Lock, Bell, Plug, CreditCard, Palette, Globe, Webhook } from 'lucide-react';
 import DashboardShell from '@/components/showcase/DashboardShell';
 import { useToast } from '@/components/showcase/Interactions';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { settingsSchema } from '@/components/showcase/schemas';
+import { ScInput } from '@/components/showcase/FormFields';
 
 const sections = [
   { id: 'company', name: 'Company', icon: Building2 },
@@ -20,6 +24,21 @@ const sections = [
 export default function SettingsPage() {
   const [active, setActive] = React.useState('company');
   const { push } = useToast();
+
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    resolver: zodResolver(settingsSchema),
+    defaultValues: {
+      companyName: 'Acme Holdings K.K.',
+      taxId: 'JP-128-4902-0034',
+      website: 'https://acme.co',
+      industry: 'Industrial automation',
+      headOffice: '2-4-1 Marunouchi, Chiyoda, Tokyo 100-6390, JP',
+    }
+  });
+
+  const onSubmit = (data: any) => {
+    push('Company info saved · changes propagated to billing & invoices', 'success');
+  };
 
   return (
     <DashboardShell
@@ -48,17 +67,41 @@ export default function SettingsPage() {
             <motion.div className="sc-card p-7" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
               <div className="sc-sans" style={{ fontSize: 18, fontWeight: 600 }}>Company information</div>
               <div style={{ fontSize: 12, color: 'var(--sc-text-faint)', marginTop: 4 }}>This appears on invoices, emails and reports.</div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-7">
-                <div><label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>LEGAL NAME</label><input className="sc-input mt-1.5" defaultValue="Acme Holdings K.K." data-testid="company-name" /></div>
-                <div><label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>TAX ID</label><input className="sc-input mt-1.5" defaultValue="JP-128-4902-0034" /></div>
-                <div><label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>WEBSITE</label><input className="sc-input mt-1.5" defaultValue="https://acme.co" /></div>
-                <div><label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>INDUSTRY</label><input className="sc-input mt-1.5" defaultValue="Industrial automation" /></div>
-                <div className="md:col-span-2"><label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>HEAD OFFICE</label><input className="sc-input mt-1.5" defaultValue="2-4-1 Marunouchi, Chiyoda, Tokyo 100-6390, JP" /></div>
-              </div>
-              <div className="flex justify-end gap-2 mt-7">
-                <button className="sc-btn sc-btn-ghost">Cancel</button>
-                <button className="sc-btn sc-btn-primary" onClick={() => push('Company info saved · changes propagated to billing & invoices', 'success')} data-testid="save-settings">Save changes</button>
-              </div>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-7">
+                  <ScInput
+                    label="Legal Name"
+                    data-testid="company-name"
+                    error={errors.companyName?.message}
+                    {...register('companyName')}
+                  />
+                  <ScInput
+                    label="Tax ID"
+                    error={errors.taxId?.message}
+                    {...register('taxId')}
+                  />
+                  <ScInput
+                    label="Website"
+                    error={errors.website?.message}
+                    {...register('website')}
+                  />
+                  <ScInput
+                    label="Industry"
+                    error={errors.industry?.message}
+                    {...register('industry')}
+                  />
+                  <ScInput
+                    label="Head Office"
+                    wrapperClassName="md:col-span-2"
+                    error={errors.headOffice?.message}
+                    {...register('headOffice')}
+                  />
+                </div>
+                <div className="flex justify-end gap-2 mt-7">
+                  <button type="button" className="sc-btn sc-btn-ghost" onClick={() => reset()}>Cancel</button>
+                  <button type="submit" className="sc-btn sc-btn-primary" data-testid="save-settings">Save changes</button>
+                </div>
+              </form>
             </motion.div>
           )}
 

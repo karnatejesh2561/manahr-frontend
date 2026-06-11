@@ -2,11 +2,34 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, ArrowRight, Sparkles, ShieldCheck, Github } from 'lucide-react';
+import { ArrowRight, Sparkles, ShieldCheck, Github } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema } from '@/components/showcase/schemas';
+import { ScInput, ScPasswordInput, ScCheckbox } from '@/components/showcase/FormFields';
 
 export default function LoginPage() {
-  const [show, setShow] = React.useState(false);
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: 'akira@manatech.io',
+      password: 'supersecret',
+      rememberMe: true,
+    },
+  });
+
+  const onSubmit = (data: any) => {
+    console.log('Login Form Submitted:', data);
+    router.push('/showcase');
+  };
+
   return (
     <div className="sc-root sc-shell" data-testid="login-page">
       <div className="sc-aurora"><div className="blob3" /></div>
@@ -99,38 +122,39 @@ export default function LoginPage() {
               <div className="flex-1 h-px" style={{ background: 'var(--sc-border)' }} />
             </div>
 
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+              <ScInput
+                label="EMAIL"
+                type="email"
+                placeholder="founder@acme.co"
+                data-testid="email-input"
+                error={errors.email?.message}
+                {...register('email')}
+              />
+
               <div>
-                <label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>EMAIL</label>
-                <input type="email" className="sc-input mt-1.5" placeholder="founder@acme.co"
-                       defaultValue="akira@manatech.io" data-testid="email-input" />
-              </div>
-              <div>
-                <div className="flex justify-between items-center">
-                  <label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>PASSWORD</label>
+                <div className="flex justify-between items-center mb-1.5">
+                  <span className="text-[11px] font-medium tracking-wider uppercase" style={{ color: 'var(--sc-text-dim)' }}>PASSWORD</span>
                   <Link href="/showcase/auth/forgot" style={{ fontSize: 11, color: 'var(--sc-accent)' }} data-testid="forgot-link">
                     Forgot?
                   </Link>
                 </div>
-                <div className="relative mt-1.5">
-                  <input type={show ? 'text' : 'password'} className="sc-input pr-10"
-                         placeholder="••••••••••••" defaultValue="supersecret"
-                         data-testid="password-input" />
-                  <button type="button" onClick={() => setShow(!show)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 p-1"
-                          style={{ color: 'var(--sc-text-faint)' }}
-                          data-testid="toggle-password">
-                    {show ? <EyeOff size={14} /> : <Eye size={14} />}
-                  </button>
-                </div>
+                <ScPasswordInput
+                  placeholder="••••••••••••"
+                  data-testid="password-input"
+                  error={errors.password?.message}
+                  {...register('password')}
+                />
               </div>
 
-              <label className="flex items-center gap-2" style={{ fontSize: 12, color: 'var(--sc-text-dim)' }}>
-                <input type="checkbox" defaultChecked data-testid="remember-me" />
-                Remember me on this device
-              </label>
+              <ScCheckbox
+                label="Remember me on this device"
+                data-testid="remember-me"
+                error={errors.rememberMe?.message}
+                {...register('rememberMe')}
+              />
 
-              <button className="sc-btn sc-btn-primary w-full justify-center mt-2" data-testid="login-submit">
+              <button type="submit" className="sc-btn sc-btn-primary w-full justify-center mt-2" data-testid="login-submit">
                 Sign in <ArrowRight size={14} />
               </button>
             </form>

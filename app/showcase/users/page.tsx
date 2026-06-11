@@ -1,10 +1,14 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Plus, Search, Filter, Shield, Check, X, Lock } from 'lucide-react';
 import DashboardShell from '@/components/showcase/DashboardShell';
-import { Drawer, ConfirmDialog, Field, FilterPanel, FilterChip, RowMenu, SearchInput, useToast } from '@/components/showcase/Interactions';
+import { Drawer, ConfirmDialog, FilterPanel, FilterChip, RowMenu, SearchInput, useToast } from '@/components/showcase/Interactions';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { userSchema } from '@/components/showcase/schemas';
+import { ScInput, ScSelect, ScCheckbox } from '@/components/showcase/FormFields';
 
 type User = {
   id: string; n: string; r: string; d: string; s: 'active' | 'invited' | 'suspended';
@@ -37,6 +41,13 @@ const allStatuses: User['s'][] = ['active', 'invited', 'suspended'];
 
 const blank = () => ({ n: '', r: 'Member', d: '', s: 'invited' as User['s'], mfa: false });
 
+function AnimatedNumber({ value, suffix = '' }: { value: number; suffix?: string }) {
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, latest => Math.round(latest));
+  React.useEffect(() => { const controls = animate(0, value, { duration: 1 }); return controls.stop; }, [value]);
+  return <motion.span>{rounded}</motion.span> && <>{value}{suffix}</>;
+}
+
 export default function UsersPage() {
   const [list, setList] = React.useState<User[]>(initial);
   const [search, setSearch] = React.useState('');
@@ -47,7 +58,11 @@ export default function UsersPage() {
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [editing, setEditing] = React.useState<User | null>(null);
-  const [form, setForm] = React.useState(blank());
+
+  const { register, handleSubmit, control, reset, formState: { errors } } = useForm({
+    resolver: zodResolver(userSchema),
+    defaultValues: blank()
+  });
 
   const [confirmDel, setConfirmDel] = React.useState<User | null>(null);
   const { push } = useToast();
@@ -70,64 +85,64 @@ export default function UsersPage() {
     mfaPct: Math.round((list.filter(u => u.mfa).length / list.length) * 100),
   };
 
-  const openCreate = () => { setEditing(null); setForm(blank()); setDrawerOpen(true); };
-  const openEdit = (u: User) => {
-    setEditing(u);
-    setForm({ n: u.n, r: u.r, d: u.d, s: u.s, mfa: u.mfa });
+  const openCreate = () => {
+    setEditing(null);
+    reset(blank());
     setDrawerOpen(true);
   };
-  const submit = () => {
-    if (!form.n.trim()) { push('Name is required', 'danger'); return; }
-    if (!form.d.trim()) { push('Email is required', 'danger'); return; }
+  const openEdit = (u: User) => {
+    setEditing(u);
+    reset({ n: u.n, r: u.r, d: u.d, s: u.s, mfa: u.mfa });
+    setDrawerOpen(true);
+  };
+  const onSubmit = (data: any) => {
     if (editing) {
-      setList(prev => prev.map(x => x.id === editing.id ? { ...editing, ...form } : x));
-      push(`Updated · ${form.n}`);
+      setList(prev => prev.map(x => x.id === editing.id ? { ...editing, ...data } : x));
+      push(`Updated · ${data.n}`);
     } else {
       const id = 'u' + Date.now();
       const c = COLORS[Math.floor(Math.random() * COLORS.length)];
-      setList(prev => [{ id, ...form, a: initials(form.n), c, ls: '—' }, ...prev]);
-      push(`Invite sent · ${form.n}`);
+      setList(prev => [{ id, ...data, a: initials(data.n), c, ls: '—' }, ...prev]);
+      push(`Invite sent · ${data.n}`);
     }
     setDrawerOpen(false);
   };
   const remove = (u: User) => { setList(prev => prev.filter(x => x.id !== u.id)); push(`Removed · ${u.n}`, 'info'); };
   const toggleMfa = (u: User) => {
     setList(prev => prev.map(x => x.id === u.id ? { ...x, mfa: !x.mfa } : x));
-    push(`MFA ${u.mfa ? 'disabled' : 'enabled'} · ${u.n}`, u.mfa ? 'info' : 'success');
-  };
-  const toggleSuspend = (u: User) => {
-    const next: User['s'] = u.s === 'suspended' ? 'active' : 'suspended';
-    setList(prev => prev.map(x => x.id === u.id ? { ...x, s: next } : x));
-    push(`${u.n} → ${next}`, next === 'suspended' ? 'danger' : 'success');
+    push(`MFA toggled for ${u.n}`);
   };
 
   const activeFilterCount = roleFilters.length + statusFilters.length + (mfaOnly ? 1 : 0);
 
   return (
     <DashboardShell
-      title="Users & roles"
-      subtitle="Granular RBAC, SSO, MFA — manage who sees what."
-      breadcrumb={['Workspace', 'Admin', 'Users & roles']}
+      title="Users & permissions"
+      subtitle="Invite members, control roles and monitor security configurations."
+      breadcrumb={['Workspace', 'Admin', 'Users']}
       actions={
         <>
           <button className="sc-btn" onClick={() => setFilterOpen(!filterOpen)} data-testid="open-filters">
             <Filter size={13} />Filter{activeFilterCount > 0 && <span className="sc-chip sc-chip-accent" style={{ padding: '1px 6px', fontSize: 10 }}>{activeFilterCount}</span>}
           </button>
-          <button className="sc-btn sc-btn-primary" onClick={openCreate} data-testid="invite-user"><Plus size={13} />Invite user</button>
+          <button className="sc-btn sc-btn-primary" onClick={openCreate} data-testid="invite-user"><Plus size={13} />Invite member</button>
         </>
       }
     >
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[
-          { l: 'Total users', v: totals.total, c: '#b6ff3c' },
-          { l: 'Active', v: totals.activeToday, c: '#6affe0' },
-          { l: 'Pending invites', v: totals.pending, c: '#ffb547' },
-          { l: 'MFA enabled', v: `${totals.mfaPct}%`, c: '#7a5cff' },
-        ].map(k => (
-          <div key={k.l} className="sc-card p-5">
+          { l: 'Total members', v: totals.total, suffix: '', c: '#b6ff3c' },
+          { l: 'Active today', v: totals.activeToday, suffix: '', c: '#6affe0' },
+          { l: 'Pending invites', v: totals.pending, suffix: '', c: '#ff6bcb' },
+          { l: 'MFA enabled', v: totals.mfaPct, suffix: '%', c: '#ffb547' },
+        ].map((k, i) => (
+          <motion.div key={k.l} className="sc-card p-5"
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
             <div style={{ fontSize: 11, color: 'var(--sc-text-faint)' }}>{k.l.toUpperCase()}</div>
-            <div className="sc-stat-value mt-2" style={{ color: k.c }}>{k.v}</div>
-          </div>
+            <div className="sc-stat-value mt-3" style={{ color: k.c }}>
+              <AnimatedNumber value={k.v} suffix={k.suffix} />
+            </div>
+          </motion.div>
         ))}
       </div>
 
@@ -146,45 +161,51 @@ export default function UsersPage() {
             testid={`filter-status-${s}`}>{s}</FilterChip>
         ))}
         <div className="h-5 w-px" style={{ background: 'var(--sc-border)' }} />
-        <FilterChip active={mfaOnly} onClick={() => setMfaOnly(!mfaOnly)} testid="filter-mfa">MFA enabled only</FilterChip>
+        <FilterChip active={mfaOnly} onClick={() => setMfaOnly(!mfaOnly)} testid="filter-mfa">MFA required</FilterChip>
         {activeFilterCount > 0 && (
           <button onClick={() => { setRoleFilters([]); setStatusFilters([]); setMfaOnly(false); }}
                   className="sc-btn sc-btn-ghost ml-auto" style={{ padding: '6px 12px', fontSize: 11 }}>Clear filters</button>
         )}
       </FilterPanel>
 
-      <motion.div className="sc-card p-6 mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <div className="flex justify-between items-center mb-4">
-          <div className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>Team members ({filtered.length})</div>
-          <SearchInput value={search} onChange={setSearch} placeholder="Search users..." testid="user-search" />
+      <motion.div className="sc-card p-6 mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
+        <div className="flex items-center justify-between mb-4">
+          <div className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>Team directory</div>
+          <SearchInput value={search} onChange={setSearch} placeholder="Search members..." testid="user-search" />
         </div>
         <div className="overflow-x-auto sc-scroll">
           <table className="sc-table">
-            <thead><tr><th></th><th>USER</th><th>ROLE</th><th>STATUS</th><th>MFA</th><th>LAST SEEN</th><th></th></tr></thead>
+            <thead>
+              <tr>
+                <th style={{ width: 40 }}><input type="checkbox" /></th>
+                <th>MEMBER</th><th>EMAIL</th><th>ROLE</th><th>MFA STATUS</th><th>LAST ACTIVE</th><th></th>
+              </tr>
+            </thead>
             <tbody>
               {filtered.map((u) => (
                 <tr key={u.id} data-testid={`user-row-${u.id}`}>
-                  <td style={{ width: 40 }}><input type="checkbox" /></td>
+                  <td><input type="checkbox" /></td>
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="sc-avatar" style={{ background: `linear-gradient(135deg, ${u.c}, ${u.c}66)` }}>{u.a}</div>
-                      <div><div>{u.n}</div><div style={{ fontSize: 11, color: 'var(--sc-text-faint)' }}>{u.d}</div></div>
+                      <div>
+                        <div style={{ fontWeight: 500 }}>{u.n}</div>
+                      </div>
                     </div>
                   </td>
+                  <td style={{ color: 'var(--sc-text-dim)' }}>{u.d}</td>
                   <td><span className="sc-chip sc-chip-violet">{u.r}</span></td>
-                  <td><span className={`sc-chip ${u.s === 'active' ? 'sc-chip-success' : u.s === 'invited' ? 'sc-chip-info' : 'sc-chip-danger'}`}>{u.s}</span></td>
                   <td>
-                    {u.mfa
-                      ? <span className="inline-flex items-center gap-1.5" style={{ fontSize: 11, color: 'var(--sc-success)' }}><Shield size={11} />on</span>
-                      : <span className="inline-flex items-center gap-1.5" style={{ fontSize: 11, color: 'var(--sc-text-faint)' }}><Lock size={11} />off</span>}
+                    <button onClick={() => toggleMfa(u)} className={`sc-chip ${u.mfa ? 'sc-chip-success' : 'sc-chip-danger'}`} style={{ cursor: 'pointer' }}>
+                      {u.mfa ? 'Enabled' : 'Disabled'}
+                    </button>
                   </td>
-                  <td style={{ color: 'var(--sc-text-dim)' }}>{u.ls}</td>
+                  <td style={{ color: 'var(--sc-text-faint)' }}>{u.ls}</td>
                   <td>
                     <RowMenu items={[
-                      { label: 'Edit', onClick: () => openEdit(u), testid: `edit-user-${u.id}` },
-                      { label: u.mfa ? 'Disable MFA' : 'Enable MFA', onClick: () => toggleMfa(u) },
-                      { label: u.s === 'suspended' ? 'Reactivate' : 'Suspend', onClick: () => toggleSuspend(u) },
-                      { label: 'Remove', onClick: () => setConfirmDel(u), danger: true, testid: `delete-user-${u.id}` },
+                      { label: 'Edit user', onClick: () => openEdit(u), testid: `edit-user-${u.id}` },
+                      { label: 'Toggle MFA requirement', onClick: () => toggleMfa(u) },
+                      { label: 'Revoke access', onClick: () => setConfirmDel(u), danger: true, testid: `delete-user-${u.id}` },
                     ]} />
                   </td>
                 </tr>
@@ -234,41 +255,75 @@ export default function UsersPage() {
         footer={
           <>
             <button className="sc-btn sc-btn-ghost" onClick={() => setDrawerOpen(false)}>Cancel</button>
-            <button className="sc-btn sc-btn-primary" onClick={submit} data-testid="drawer-submit">
+            <button className="sc-btn sc-btn-primary" onClick={handleSubmit(onSubmit)} data-testid="drawer-submit">
               {editing ? 'Save changes' : 'Send invite'}
             </button>
           </>
         }
       >
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="Full name" span={2}>
-            <input className="sc-input" value={form.n} onChange={(e) => setForm({ ...form, n: e.target.value })}
-                   placeholder="Jane Doe" data-testid="user-name" autoFocus />
-          </Field>
-          <Field label="Email" span={2}>
-            <input type="email" className="sc-input" value={form.d} onChange={(e) => setForm({ ...form, d: e.target.value })}
-                   placeholder="jane@company.com" data-testid="user-email" />
-          </Field>
-          <Field label="Role">
-            <select className="sc-input" value={form.r} onChange={(e) => setForm({ ...form, r: e.target.value })} data-testid="user-role">
-              {roleList.map(r => <option key={r}>{r}</option>)}
-            </select>
-          </Field>
-          <Field label="Status">
-            <select className="sc-input" value={form.s} onChange={(e) => setForm({ ...form, s: e.target.value as User['s'] })}>
-              {allStatuses.map(s => <option key={s}>{s}</option>)}
-            </select>
-          </Field>
-          <div className="col-span-2">
-            <label className="flex items-center gap-2 cursor-pointer p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid var(--sc-border)' }}>
-              <input type="checkbox" checked={form.mfa} onChange={(e) => setForm({ ...form, mfa: e.target.checked })} />
-              <div>
-                <div style={{ fontSize: 13 }}>Require MFA from first login</div>
-                <div style={{ fontSize: 11, color: 'var(--sc-text-faint)', marginTop: 2 }}>Recommended for compliance</div>
-              </div>
-            </label>
+        <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit(onSubmit)}>
+          <ScInput
+            label="Full name"
+            placeholder="Jane Doe"
+            data-testid="user-name"
+            wrapperClassName="col-span-2"
+            error={errors.n?.message as string}
+            {...register('n')}
+            autoFocus
+          />
+
+          <ScInput
+            label="Email"
+            type="email"
+            placeholder="jane@company.com"
+            data-testid="user-email"
+            wrapperClassName="col-span-2"
+            error={errors.d?.message as string}
+            {...register('d')}
+          />
+
+          <Controller
+            name="r"
+            control={control}
+            render={({ field }) => (
+              <ScSelect
+                label="Role"
+                value={field.value}
+                onChange={field.onChange}
+                options={roleList.map(r => ({ label: r, value: r }))}
+                data-testid="user-role"
+                error={errors.r?.message as string}
+              />
+            )}
+          />
+
+          <Controller
+            name="s"
+            control={control}
+            render={({ field }) => (
+              <ScSelect
+                label="Status"
+                value={field.value}
+                onChange={field.onChange}
+                options={allStatuses.map(s => ({ label: s, value: s }))}
+                error={errors.s?.message as string}
+              />
+            )}
+          />
+
+          <div className="col-span-2 mt-2">
+            <ScCheckbox
+              label={
+                <div>
+                  <div style={{ fontSize: 13, color: 'var(--sc-text)' }}>Require MFA from first login</div>
+                  <div style={{ fontSize: 11, color: 'var(--sc-text-faint)', marginTop: 2 }}>Recommended for compliance</div>
+                </div>
+              }
+              error={errors.mfa?.message as string}
+              {...register('mfa')}
+            />
           </div>
-        </div>
+        </form>
       </Drawer>
 
       <ConfirmDialog

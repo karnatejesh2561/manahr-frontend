@@ -4,7 +4,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Filter, Mail, MapPin, Briefcase, Calendar, Phone, Plus } from 'lucide-react';
 import DashboardShell from '@/components/showcase/DashboardShell';
-import { Drawer, ConfirmDialog, Field, FilterPanel, FilterChip, RowMenu, SearchInput, useToast } from '@/components/showcase/Interactions';
+import { Drawer, ConfirmDialog, FilterPanel, FilterChip, RowMenu, SearchInput, useToast } from '@/components/showcase/Interactions';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { employeeSchema } from '@/components/showcase/schemas';
+import { ScInput, ScSelect } from '@/components/showcase/FormFields';
 
 type Employee = {
   id: string; n: string; r: string; d: string; l: string; e: string;
@@ -43,7 +47,11 @@ export default function EmployeesPage() {
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [editing, setEditing] = React.useState<Employee | null>(null);
-  const [form, setForm] = React.useState(blank());
+
+  const { register, handleSubmit, control, reset, formState: { errors } } = useForm({
+    resolver: zodResolver(employeeSchema),
+    defaultValues: blank()
+  });
 
   const [confirmDel, setConfirmDel] = React.useState<Employee | null>(null);
   const { push } = useToast();
@@ -58,23 +66,25 @@ export default function EmployeesPage() {
     return true;
   });
 
-  const openCreate = () => { setEditing(null); setForm(blank()); setDrawerOpen(true); };
-  const openEdit = (e: Employee) => {
-    setEditing(e);
-    setForm({ n: e.n, r: e.r, d: e.d, l: e.l, e: e.e, t: e.t, s: e.s });
+  const openCreate = () => {
+    setEditing(null);
+    reset(blank());
     setDrawerOpen(true);
   };
-  const submit = () => {
-    if (!form.n.trim()) { push('Name is required', 'danger'); return; }
-    if (!form.e.trim()) { push('Email is required', 'danger'); return; }
+  const openEdit = (e: Employee) => {
+    setEditing(e);
+    reset({ n: e.n, r: e.r, d: e.d, l: e.l, e: e.e, t: e.t, s: e.s });
+    setDrawerOpen(true);
+  };
+  const onSubmit = (data: any) => {
     if (editing) {
-      setList(prev => prev.map(x => x.id === editing.id ? { ...editing, ...form } : x));
-      push(`Updated · ${form.n}`);
+      setList(prev => prev.map(x => x.id === editing.id ? { ...editing, ...data } : x));
+      push(`Updated · ${data.n}`);
     } else {
       const id = 'e' + Date.now();
       const c = COLORS[Math.floor(Math.random() * COLORS.length)];
-      setList(prev => [{ id, ...form, a: initials(form.n), c }, ...prev]);
-      push(`Added · ${form.n}`);
+      setList(prev => [{ id, ...data, a: initials(data.n), c }, ...prev]);
+      push(`Added · ${data.n}`);
     }
     setDrawerOpen(false);
   };
@@ -88,94 +98,101 @@ export default function EmployeesPage() {
   return (
     <DashboardShell
       title="Employee directory"
-      subtitle={`${list.length} people across ${new Set(list.map(l => l.d)).size} departments, 4 timezones.`}
+      subtitle="Manage your distributed team, departments, roles, and profiles."
       breadcrumb={['Workspace', 'People', 'Directory']}
       actions={
         <>
-          <div className="sc-tabs">
-            <button className={`sc-tab ${view === 'grid' ? 'active' : ''}`} onClick={() => setView('grid')} data-testid="view-toggle-grid">Grid</button>
-            <button className={`sc-tab ${view === 'list' ? 'active' : ''}`} onClick={() => setView('list')} data-testid="view-toggle-list">List</button>
+          <div className="sc-tabs mr-1">
+            <button className={`sc-tab ${view === 'grid' ? 'active' : ''}`} onClick={() => setView('grid')}>Grid</button>
+            <button className={`sc-tab ${view === 'list' ? 'active' : ''}`} onClick={() => setView('list')}>List</button>
           </div>
-          <button className="sc-btn" onClick={() => setFilterOpen(!filterOpen)} data-testid="open-filters">
-            <Filter size={13} />Filter{activeFilterCount > 0 && <span className="sc-chip sc-chip-accent" style={{ padding: '1px 6px', fontSize: 10 }}>{activeFilterCount}</span>}
+          <button className="sc-btn" onClick={() => setFilterOpen(!filterOpen)}>
+            <Filter size={13} />Filters{activeFilterCount > 0 && <span className="sc-chip sc-chip-accent" style={{ padding: '1px 6px', fontSize: 10 }}>{activeFilterCount}</span>}
           </button>
-          <button className="sc-btn sc-btn-primary" onClick={openCreate} data-testid="add-employee"><Plus size={13} />Add employee</button>
+          <button className="sc-btn sc-btn-primary" onClick={openCreate} data-testid="add-emp"><Plus size={13} />Add employee</button>
         </>
       }
     >
-      <motion.div className="sc-card p-4 mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <SearchInput value={search} onChange={setSearch} placeholder="Search by name, role, email or location..." testid="emp-search" width={1000} />
-      </motion.div>
-
       <FilterPanel open={filterOpen}>
         <span style={{ fontSize: 11, color: 'var(--sc-text-faint)' }}>DEPARTMENT</span>
         {allDepartments.map(d => (
           <FilterChip key={d} active={depFilters.includes(d)}
-            onClick={() => setDepFilters(p => p.includes(d) ? p.filter(x => x !== d) : [...p, d])}
-            testid={`filter-dept-${d.toLowerCase()}`}>{d}</FilterChip>
+            onClick={() => setDepFilters(p => p.includes(d) ? p.filter(x => x !== d) : [...p, d])}>
+            {d}
+          </FilterChip>
         ))}
         <div className="h-5 w-px" style={{ background: 'var(--sc-border)' }} />
         <span style={{ fontSize: 11, color: 'var(--sc-text-faint)' }}>STATUS</span>
         {allStatuses.map(s => (
           <FilterChip key={s} active={statusFilters.includes(s)}
-            onClick={() => setStatusFilters(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s])}
-            testid={`filter-status-${s}`}>{s}</FilterChip>
+            onClick={() => setStatusFilters(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s])}>
+            {s}
+          </FilterChip>
         ))}
         {activeFilterCount > 0 && (
-          <button onClick={() => { setDepFilters([]); setStatusFilters([]); }}
-                  className="sc-btn sc-btn-ghost ml-auto" style={{ padding: '6px 12px', fontSize: 11 }}>
-            Clear filters
+          <button onClick={() => { setDepFilters([]); setStatusFilters([]); }} className="sc-btn sc-btn-ghost" style={{ padding: '6px 12px', fontSize: 11 }}>
+            Clear all
           </button>
         )}
       </FilterPanel>
 
-      <div style={{ fontSize: 11, color: 'var(--sc-text-faint)', marginBottom: 12 }}>
-        Showing {filtered.length} of {list.length}
+      <div className="flex items-center justify-between mb-4 mt-2">
+        <div className="sc-sans animate-fade-in" style={{ fontSize: 14, fontWeight: 600 }}>Active members · {filtered.length}</div>
+        <SearchInput value={search} onChange={setSearch} placeholder="Search members..." testid="emp-search" />
       </div>
 
-      {view === 'grid' ? (
+      {view === 'grid' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filtered.map((emp, i) => (
-            <motion.div key={emp.id} className="sc-card p-5 sc-tilt"
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-              data-testid={`emp-card-${emp.id}`}>
-              <div className="flex items-start justify-between mb-4">
-                <div className="sc-avatar relative" style={{ width: 56, height: 56, fontSize: 18, background: `linear-gradient(135deg, ${emp.c}, ${emp.c}66)` }}>
-                  {emp.a}
-                  <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2"
-                        style={{
-                          background: emp.s === 'active' ? 'var(--sc-success)' : emp.s === 'leave' ? 'var(--sc-accent-5)' : 'var(--sc-danger)',
-                          borderColor: 'var(--sc-bg)',
-                        }} />
+            <motion.div
+              key={emp.id} className="sc-card p-6 flex flex-col justify-between"
+              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
+              data-testid={`emp-card-${emp.id}`}
+            >
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <div className="sc-avatar" style={{ background: `linear-gradient(135deg, ${emp.c}, ${emp.c}66)`, width: 44, height: 44, fontSize: 14 }}>{emp.a}</div>
+                  <RowMenu items={[
+                    { label: 'Edit record', onClick: () => openEdit(emp) },
+                    { label: 'Send message', onClick: () => push(`Message → ${emp.n}`, 'info') },
+                    { label: 'Remove employee', onClick: () => setConfirmDel(emp), danger: true },
+                  ]} />
                 </div>
-                <RowMenu items={[
-                  { label: 'Edit', onClick: () => openEdit(emp), testid: `edit-emp-${emp.id}` },
-                  { label: 'Send message', onClick: () => push(`Message → ${emp.n}`, 'info') },
-                  { label: 'Remove', onClick: () => setConfirmDel(emp), danger: true, testid: `delete-emp-${emp.id}` },
-                ]} />
+                <div className="sc-sans" style={{ fontSize: 16, fontWeight: 600 }}>{emp.n}</div>
+                <div style={{ fontSize: 12, color: 'var(--sc-text-dim)', marginTop: 2 }}>{emp.r}</div>
+                <div className="flex items-center gap-1.5 mt-3 text-[11px] uppercase tracking-wider" style={{ color: 'var(--sc-text-faint)' }}>
+                  <span className="sc-chip" style={{ fontSize: 10, padding: '1px 6px' }}>{emp.d}</span>
+                </div>
               </div>
-              <div className="sc-sans" style={{ fontSize: 15, fontWeight: 600 }}>{emp.n}</div>
-              <div style={{ fontSize: 12, color: 'var(--sc-text-dim)', marginTop: 2 }}>{emp.r}</div>
-              <div className="mt-4 pt-4 border-t space-y-2" style={{ borderColor: 'var(--sc-border)', fontSize: 11, color: 'var(--sc-text-dim)' }}>
-                <div className="flex items-center gap-2"><Briefcase size={11} />{emp.d}</div>
-                <div className="flex items-center gap-2"><MapPin size={11} />{emp.l}</div>
-                <div className="flex items-center gap-2"><Calendar size={11} />{emp.t} tenure</div>
-              </div>
-              <div className="mt-4 flex gap-2">
-                <button onClick={() => push(`Drafting email to ${emp.n}...`, 'info')} className="sc-btn flex-1 justify-center" style={{ padding: '6px 0', fontSize: 11 }}><Mail size={11} />Message</button>
-                <button onClick={() => openEdit(emp)} className="sc-btn" style={{ padding: '6px 10px', fontSize: 11 }}><Phone size={11} /></button>
+
+              <div className="border-t mt-6 pt-4 flex flex-col gap-2.5" style={{ borderColor: 'var(--sc-border)' }}>
+                <div className="flex items-center justify-between text-xs">
+                  <span style={{ color: 'var(--sc-text-faint)' }} className="flex items-center gap-1.5"><Mail size={12} />Email</span>
+                  <span style={{ color: 'var(--sc-text-dim)' }}>{emp.e}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span style={{ color: 'var(--sc-text-faint)' }} className="flex items-center gap-1.5"><MapPin size={12} />Location</span>
+                  <span style={{ color: 'var(--sc-text-dim)' }}>{emp.l}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span style={{ color: 'var(--sc-text-faint)' }} className="flex items-center gap-1.5"><Calendar size={12} />Tenure</span>
+                  <span style={{ color: 'var(--sc-text-dim)' }}>{emp.t}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs mt-1">
+                  <span style={{ color: 'var(--sc-text-faint)' }}>Status</span>
+                  <span className={`sc-chip ${emp.s === 'active' ? 'sc-chip-success' : emp.s === 'leave' ? 'sc-chip-warning' : 'sc-chip-danger'}`} style={{ fontSize: 9, padding: '1px 6px' }}>{emp.s}</span>
+                </div>
               </div>
             </motion.div>
           ))}
           {filtered.length === 0 && (
-            <div className="col-span-full sc-card p-12 text-center" style={{ color: 'var(--sc-text-faint)' }}>
-              No employees match your filters.{' '}
-              <button onClick={() => { setSearch(''); setDepFilters([]); setStatusFilters([]); }} className="underline" style={{ color: 'var(--sc-accent)' }}>Clear all</button>
-            </div>
+            <div className="sc-card p-12 md:col-span-3 text-center" style={{ color: 'var(--sc-text-faint)' }}>No employees match your search or filters.</div>
           )}
         </div>
-      ) : (
-        <motion.div className="sc-card p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      )}
+
+      {view === 'list' && (
+        <motion.div className="sc-card p-4 overflow-x-auto sc-scroll" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <table className="sc-table">
             <thead><tr><th>EMPLOYEE</th><th>DEPARTMENT</th><th>LOCATION</th><th>TENURE</th><th>STATUS</th><th></th></tr></thead>
             <tbody>
@@ -214,42 +231,85 @@ export default function EmployeesPage() {
         footer={
           <>
             <button className="sc-btn sc-btn-ghost" onClick={() => setDrawerOpen(false)}>Cancel</button>
-            <button className="sc-btn sc-btn-primary" onClick={submit} data-testid="drawer-submit">
+            <button className="sc-btn sc-btn-primary" onClick={handleSubmit(onSubmit)} data-testid="drawer-submit">
               {editing ? 'Save changes' : 'Add employee'}
             </button>
           </>
         }
       >
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="Full name" span={2}>
-            <input className="sc-input" value={form.n} onChange={(e) => setForm({ ...form, n: e.target.value })}
-                   placeholder="e.g. Ren Okada" data-testid="emp-name" autoFocus />
-          </Field>
-          <Field label="Role" span={2}>
-            <input className="sc-input" value={form.r} onChange={(e) => setForm({ ...form, r: e.target.value })}
-                   placeholder="e.g. Sr. Engineer" data-testid="emp-role" />
-          </Field>
-          <Field label="Department">
-            <select className="sc-input" value={form.d} onChange={(e) => setForm({ ...form, d: e.target.value })} data-testid="emp-dept">
-              {allDepartments.map(d => <option key={d}>{d}</option>)}
-            </select>
-          </Field>
-          <Field label="Status">
-            <select className="sc-input" value={form.s} onChange={(e) => setForm({ ...form, s: e.target.value as Employee['s'] })}>
-              {allStatuses.map(s => <option key={s}>{s}</option>)}
-            </select>
-          </Field>
-          <Field label="Email" span={2}>
-            <input type="email" className="sc-input" value={form.e} onChange={(e) => setForm({ ...form, e: e.target.value })}
-                   placeholder="name@manatech.io" data-testid="emp-email" />
-          </Field>
-          <Field label="Location">
-            <input className="sc-input" value={form.l} onChange={(e) => setForm({ ...form, l: e.target.value })} placeholder="City, Country" />
-          </Field>
-          <Field label="Tenure">
-            <input className="sc-input" value={form.t} onChange={(e) => setForm({ ...form, t: e.target.value })} placeholder="e.g. 1y 4m" />
-          </Field>
-        </div>
+        <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit(onSubmit)}>
+          <ScInput
+            label="Full name"
+            placeholder="e.g. Ren Okada"
+            data-testid="emp-name"
+            wrapperClassName="col-span-2"
+            error={errors.n?.message as string}
+            {...register('n')}
+            autoFocus
+          />
+
+          <ScInput
+            label="Role"
+            placeholder="e.g. Sr. Engineer"
+            data-testid="emp-role"
+            wrapperClassName="col-span-2"
+            error={errors.r?.message as string}
+            {...register('r')}
+          />
+
+          <Controller
+            name="d"
+            control={control}
+            render={({ field }) => (
+              <ScSelect
+                label="Department"
+                value={field.value}
+                onChange={field.onChange}
+                options={allDepartments.map(d => ({ label: d, value: d }))}
+                data-testid="emp-dept"
+                error={errors.d?.message as string}
+              />
+            )}
+          />
+
+          <Controller
+            name="s"
+            control={control}
+            render={({ field }) => (
+              <ScSelect
+                label="Status"
+                value={field.value}
+                onChange={field.onChange}
+                options={allStatuses.map(s => ({ label: s, value: s }))}
+                error={errors.s?.message as string}
+              />
+            )}
+          />
+
+          <ScInput
+            label="Email"
+            type="email"
+            placeholder="name@manatech.io"
+            data-testid="emp-email"
+            wrapperClassName="col-span-2"
+            error={errors.e?.message as string}
+            {...register('e')}
+          />
+
+          <ScInput
+            label="Location"
+            placeholder="City, Country"
+            error={errors.l?.message as string}
+            {...register('l')}
+          />
+
+          <ScInput
+            label="Tenure"
+            placeholder="e.g. 1y 4m"
+            error={errors.t?.message as string}
+            {...register('t')}
+          />
+        </form>
       </Drawer>
 
       <ConfirmDialog

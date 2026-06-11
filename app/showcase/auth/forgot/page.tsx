@@ -2,10 +2,32 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Mail, ArrowRight } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { forgotSchema } from '@/components/showcase/schemas';
+import { ScInput } from '@/components/showcase/FormFields';
 
 export default function ForgotPage() {
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(forgotSchema),
+    defaultValues: {
+      email: 'akira@manatech.io',
+    },
+  });
+
+  const onSubmit = (data: any) => {
+    console.log('Forgot Password Submitted:', data);
+    router.push('/showcase/auth/otp');
+  };
+
   return (
     <div className="sc-root sc-shell" data-testid="forgot-page">
       <div className="sc-aurora"><div className="blob3" /></div>
@@ -27,15 +49,18 @@ export default function ForgotPage() {
             Enter the email tied to your account. We&apos;ll send a secure link to reset your password — valid for 15 minutes.
           </p>
 
-          <form className="mt-6 space-y-4" onSubmit={(e) => e.preventDefault()}>
-            <div>
-              <label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>EMAIL</label>
-              <input type="email" className="sc-input mt-1.5" placeholder="you@company.com"
-                     defaultValue="akira@manatech.io" data-testid="forgot-email" />
-            </div>
-            <Link href="/showcase/auth/otp" className="sc-btn sc-btn-primary w-full justify-center" data-testid="send-reset">
+          <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <ScInput
+              label="EMAIL"
+              type="email"
+              placeholder="you@company.com"
+              data-testid="forgot-email"
+              error={errors.email?.message}
+              {...register('email')}
+            />
+            <button type="submit" className="sc-btn sc-btn-primary w-full justify-center" data-testid="send-reset">
               Send reset link <ArrowRight size={14} />
-            </Link>
+            </button>
           </form>
 
           <div className="mt-6 text-center" style={{ fontSize: 12, color: 'var(--sc-text-faint)' }}>

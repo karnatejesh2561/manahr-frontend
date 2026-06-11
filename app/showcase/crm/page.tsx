@@ -5,7 +5,11 @@ import { motion } from 'framer-motion';
 import { Plus, Filter, Phone, Mail } from 'lucide-react';
 import DashboardShell from '@/components/showcase/DashboardShell';
 import { Funnel, DonutChart, AnimatedNumber } from '@/components/showcase/Charts';
-import { Drawer, ConfirmDialog, Field, FilterPanel, FilterChip, RowMenu, SearchInput, useToast } from '@/components/showcase/Interactions';
+import { Drawer, ConfirmDialog, FilterPanel, FilterChip, RowMenu, SearchInput, useToast } from '@/components/showcase/Interactions';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { dealSchema } from '@/components/showcase/schemas';
+import { ScInput, ScSelect } from '@/components/showcase/FormFields';
 
 const stages = [
   { name: 'Prospect', color: '#9ea0b3' },
@@ -41,7 +45,11 @@ export default function CRMPage() {
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [editing, setEditing] = React.useState<Deal | null>(null);
-  const [form, setForm] = React.useState(blank());
+
+  const { register, handleSubmit, control, reset, formState: { errors } } = useForm({
+    resolver: zodResolver(dealSchema),
+    defaultValues: blank()
+  });
 
   const [confirmDel, setConfirmDel] = React.useState<Deal | null>(null);
   const { push } = useToast();
@@ -62,22 +70,23 @@ export default function CRMPage() {
   };
 
   const openCreate = () => {
-    setEditing(null); setForm(blank()); setDrawerOpen(true);
+    setEditing(null);
+    reset(blank());
+    setDrawerOpen(true);
   };
   const openEdit = (d: Deal) => {
     setEditing(d);
-    setForm({ c: d.c, l: d.l, v: d.v, s: d.s, p: d.p, due: d.due });
+    reset({ c: d.c, l: d.l, v: d.v, s: d.s, p: d.p, due: d.due });
     setDrawerOpen(true);
   };
-  const submit = () => {
-    if (!form.c.trim()) { push('Company name is required', 'danger'); return; }
+  const onSubmit = (data: any) => {
     if (editing) {
-      setDeals(prev => prev.map(d => d.id === editing.id ? { ...editing, ...form } : d));
-      push(`Updated · ${form.c}`);
+      setDeals(prev => prev.map(d => d.id === editing.id ? { ...editing, ...data } : d));
+      push(`Updated · ${data.c}`);
     } else {
       const id = 'd' + Date.now();
-      setDeals(prev => [{ id, ...form }, ...prev]);
-      push(`Deal added · ${form.c}`);
+      setDeals(prev => [{ id, ...data }, ...prev]);
+      push(`Deal added · ${data.c}`);
     }
     setDrawerOpen(false);
   };
@@ -291,41 +300,79 @@ export default function CRMPage() {
         footer={
           <>
             <button className="sc-btn sc-btn-ghost" onClick={() => setDrawerOpen(false)} data-testid="drawer-cancel">Cancel</button>
-            <button className="sc-btn sc-btn-primary" onClick={submit} data-testid="drawer-submit">
+            <button className="sc-btn sc-btn-primary" onClick={handleSubmit(onSubmit)} data-testid="drawer-submit">
               {editing ? 'Save changes' : 'Create deal'}
             </button>
           </>
         }
       >
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="Company" span={2}>
-            <input className="sc-input" value={form.c} onChange={(e) => setForm({ ...form, c: e.target.value })}
-                   placeholder="e.g. Northwind Traders" data-testid="deal-company" autoFocus />
-          </Field>
-          <Field label="Owner">
-            <select className="sc-input" value={form.l} onChange={(e) => setForm({ ...form, l: e.target.value })} data-testid="deal-owner">
-              {owners.map(o => <option key={o} value={o}>{o}</option>)}
-            </select>
-          </Field>
-          <Field label="Deal value (USD)">
-            <input type="number" className="sc-input" value={form.v}
-                   onChange={(e) => setForm({ ...form, v: Number(e.target.value) || 0 })}
-                   placeholder="0" data-testid="deal-value" />
-          </Field>
-          <Field label="Stage">
-            <select className="sc-input" value={form.s} onChange={(e) => setForm({ ...form, s: e.target.value })} data-testid="deal-stage">
-              {stages.map(s => <option key={s.name}>{s.name}</option>)}
-            </select>
-          </Field>
-          <Field label="Probability (%)">
-            <input type="number" min={0} max={100} className="sc-input" value={form.p}
-                   onChange={(e) => setForm({ ...form, p: Number(e.target.value) || 0 })} />
-          </Field>
-          <Field label="Expected close" span={2}>
-            <input className="sc-input" value={form.due} onChange={(e) => setForm({ ...form, due: e.target.value })}
-                   placeholder="e.g. 14d or Dec 24" />
-          </Field>
-        </div>
+        <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit(onSubmit)}>
+          <ScInput
+            label="Company"
+            placeholder="e.g. Northwind Traders"
+            data-testid="deal-company"
+            wrapperClassName="col-span-2"
+            error={errors.c?.message}
+            {...register('c')}
+            autoFocus
+          />
+
+          <Controller
+            name="l"
+            control={control}
+            render={({ field }) => (
+              <ScSelect
+                label="Owner"
+                value={field.value}
+                onChange={field.onChange}
+                options={owners.map(o => ({ label: o, value: o }))}
+                data-testid="deal-owner"
+                error={errors.l?.message}
+              />
+            )}
+          />
+
+          <ScInput
+            label="Deal value (USD)"
+            type="number"
+            placeholder="0"
+            data-testid="deal-value"
+            error={errors.v?.message}
+            {...register('v')}
+          />
+
+          <Controller
+            name="s"
+            control={control}
+            render={({ field }) => (
+              <ScSelect
+                label="Stage"
+                value={field.value}
+                onChange={field.onChange}
+                options={stages.map(s => ({ label: s.name, value: s.name }))}
+                data-testid="deal-stage"
+                error={errors.s?.message}
+              />
+            )}
+          />
+
+          <ScInput
+            label="Probability (%)"
+            type="number"
+            min={0}
+            max={100}
+            error={errors.p?.message}
+            {...register('p')}
+          />
+
+          <ScInput
+            label="Expected close"
+            placeholder="e.g. 14d or Dec 24"
+            wrapperClassName="col-span-2"
+            error={errors.due?.message}
+            {...register('due')}
+          />
+        </form>
 
         <div className="mt-6 pt-6 border-t" style={{ borderColor: 'var(--sc-border)' }}>
           <div style={{ fontSize: 11, color: 'var(--sc-text-faint)', marginBottom: 10 }}>QUICK ACTIONS</div>

@@ -2,10 +2,15 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Calendar, Users, Flag, Clock, Filter } from 'lucide-react';
+import { Plus, Calendar, Flag, Clock, Filter } from 'lucide-react';
 import DashboardShell from '@/components/showcase/DashboardShell';
 import { RadialGauge, AnimatedNumber } from '@/components/showcase/Charts';
-import { Drawer, ConfirmDialog, Field, FilterPanel, FilterChip, RowMenu, useToast } from '@/components/showcase/Interactions';
+import { Drawer, ConfirmDialog, FilterPanel, FilterChip, RowMenu, useToast } from '@/components/showcase/Interactions';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { taskSchema } from '@/components/showcase/schemas';
+import { ScInput, ScSelect } from '@/components/showcase/FormFields';
+import { z } from 'zod';
 
 type Status = 'Backlog' | 'In Progress' | 'Review' | 'Done';
 type Priority = 'low' | 'med' | 'high';
@@ -45,8 +50,9 @@ const initial: Task[] = [
 ];
 
 const columns: Status[] = ['Backlog', 'In Progress', 'Review', 'Done'];
-const blank = (status: Status = 'Backlog'): Omit<Task, 'id'> => ({
-  t: '', a: 'YT', c: '#b6ff3c', p: 'med', d: '', tags: [], status,
+
+const projectTaskSchema = taskSchema.extend({
+  tagsString: z.string().optional(),
 });
 
 export default function ProjectsPage() {
@@ -57,7 +63,19 @@ export default function ProjectsPage() {
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [editing, setEditing] = React.useState<Task | null>(null);
-  const [form, setForm] = React.useState<Omit<Task, 'id'>>(blank());
+
+  const { register, handleSubmit, control, reset, formState: { errors } } = useForm({
+    resolver: zodResolver(projectTaskSchema),
+    defaultValues: {
+      t: '',
+      a: 'YT',
+      p: 'med' as Priority,
+      d: '',
+      tagsString: '',
+      status: 'Backlog' as Status
+    }
+  });
+
   const [confirmDel, setConfirmDel] = React.useState<Task | null>(null);
   const { push } = useToast();
 
@@ -67,22 +85,49 @@ export default function ProjectsPage() {
     return true;
   });
 
-  const openCreate = (status: Status = 'Backlog') => { setEditing(null); setForm(blank(status)); setDrawerOpen(true); };
-  const openEdit = (t: Task) => {
-    setEditing(t);
-    setForm({ t: t.t, a: t.a, c: t.c, p: t.p, d: t.d, tags: t.tags, status: t.status });
+  const openCreate = (status: Status = 'Backlog') => {
+    setEditing(null);
+    reset({
+      t: '',
+      a: 'YT',
+      p: 'med',
+      d: '',
+      tagsString: '',
+      status
+    });
     setDrawerOpen(true);
   };
-  const submit = () => {
-    if (!form.t.trim()) { push('Task title required', 'danger'); return; }
-    const assignee = assignees.find(x => x.i === form.a);
-    const c = assignee?.c || form.c;
+  const openEdit = (t: Task) => {
+    setEditing(t);
+    reset({
+      t: t.t,
+      a: t.a,
+      p: t.p,
+      d: t.d,
+      tagsString: t.tags.join(', '),
+      status: t.status
+    });
+    setDrawerOpen(true);
+  };
+  const onSubmit = (data: any) => {
+    const assignee = assignees.find(x => x.i === data.a);
+    const c = assignee?.c || '#b6ff3c';
+    const tags = data.tagsString ? data.tagsString.split(',').map((t: string) => t.trim()).filter(Boolean) : [];
+    const taskData = {
+      t: data.t,
+      a: data.a,
+      p: data.p,
+      d: data.d,
+      status: data.status,
+      tags,
+      c
+    };
     if (editing) {
-      setTasks(p => p.map(x => x.id === editing.id ? { ...editing, ...form, c } : x));
-      push(`Updated · ${form.t.slice(0, 40)}`);
+      setTasks(p => p.map(x => x.id === editing.id ? { ...editing, ...taskData } : x));
+      push(`Updated · ${data.t.slice(0, 40)}`);
     } else {
-      setTasks(p => [...p, { id: 't' + Date.now(), ...form, c }]);
-      push(`Task added · ${form.status}`);
+      setTasks(p => [...p, { id: 't' + Date.now(), ...taskData }]);
+      push(`Task added · ${data.status}`);
     }
     setDrawerOpen(false);
   };
@@ -92,14 +137,14 @@ export default function ProjectsPage() {
   };
   const remove = (t: Task) => { setTasks(p => p.filter(x => x.id !== t.id)); push('Task deleted', 'info'); };
 
+  const activeFilterCount = priorityFilters.length + assigneeFilters.length;
+
   const totals = {
     active: tasks.filter(t => t.status !== 'Done').length,
     done: tasks.filter(t => t.status === 'Done').length,
     velocity: 38,
     cycle: 3.2,
   };
-
-  const activeFilterCount = priorityFilters.length + assigneeFilters.length;
 
   return (
     <DashboardShell
@@ -111,7 +156,7 @@ export default function ProjectsPage() {
           <button className="sc-btn" onClick={() => setFilterOpen(!filterOpen)} data-testid="open-filters">
             <Filter size={13} />Filter{activeFilterCount > 0 && <span className="sc-chip sc-chip-accent" style={{ padding: '1px 6px', fontSize: 10 }}>{activeFilterCount}</span>}
           </button>
-          <button className="sc-btn" onClick={() => push('Team allocation view opens here', 'info')}><Users size={13} />Team</button>
+          <button className="sc-btn" onClick={() => push('Team allocation view opens here', 'info')}><Plus size={13} />Team</button>
           <button className="sc-btn" onClick={() => push('Sprint planner opens here', 'info')}><Calendar size={13} />Sprint planner</button>
           <button className="sc-btn sc-btn-primary" onClick={() => openCreate('Backlog')} data-testid="add-task"><Plus size={13} />New task</button>
         </>
@@ -145,7 +190,7 @@ export default function ProjectsPage() {
         <span style={{ fontSize: 11, color: 'var(--sc-text-faint)' }}>ASSIGNEE</span>
         {assignees.map(a => (
           <FilterChip key={a.i} active={assigneeFilters.includes(a.i)}
-            onClick={() => setAssigneeFilters(x => x.includes(a.i) ? x.filter(y => y !== a.i) : [...x, a.i])}
+            onClick={() => setAssigneeFilters(x => x.includes(a.i) ? x.filter(y => y !== a.i) : [...prev => prev, a.i])}
             testid={`filter-assignee-${a.i}`}>{a.n}</FilterChip>
         ))}
         {activeFilterCount > 0 && (
@@ -155,18 +200,12 @@ export default function ProjectsPage() {
       </FilterPanel>
 
       {/* Kanban */}
-      <motion.div className="mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-        <div className="flex items-center justify-between mb-3">
-          <div className="sc-sans" style={{ fontSize: 14, fontWeight: 600 }}>Sprint 42 · current</div>
-          <div className="flex items-center gap-3" style={{ fontSize: 12, color: 'var(--sc-text-dim)' }}>
-            <Clock size={12} />Ends in 4d 12h
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+      <motion.div className="mb-6 overflow-x-auto sc-scroll pb-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+        <div className="flex gap-4 min-w-[900px] items-start">
           {columns.map((col) => {
             const colTasks = filtered.filter(t => t.status === col);
             return (
-              <div key={col} className="sc-kanban-col">
+              <div key={col} className="flex-1 sc-kanban-col min-h-[400px]">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full" style={{ background: statusColors[col], boxShadow: `0 0 8px ${statusColors[col]}` }} />
@@ -174,11 +213,11 @@ export default function ProjectsPage() {
                   </div>
                   <span className="sc-chip" style={{ fontSize: 10 }}>{colTasks.length}</span>
                 </div>
-                <div>
+                <div className="space-y-2.5">
                   {colTasks.map((c) => (
                     <motion.div key={c.id} className="sc-kanban-card relative group"
                       initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                      data-testid={`task-${c.id}`}>
+                      data-testid={`task-${c.id}`} onClick={() => openEdit(c)}>
                       <div className="flex justify-between items-start mb-2">
                         <div style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.4, flex: 1 }}>{c.t}</div>
                         <RowMenu items={[
@@ -257,46 +296,88 @@ export default function ProjectsPage() {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         title={editing ? 'Edit task' : 'New task'}
-        subtitle={editing ? 'Update task details' : `Add to ${form.status}`}
+        subtitle={editing ? 'Update task details' : `Add to ${control._defaultValues.status}`}
         footer={
           <>
             <button className="sc-btn sc-btn-ghost" onClick={() => setDrawerOpen(false)}>Cancel</button>
-            <button className="sc-btn sc-btn-primary" onClick={submit} data-testid="drawer-submit">
+            <button className="sc-btn sc-btn-primary" onClick={handleSubmit(onSubmit)} data-testid="drawer-submit">
               {editing ? 'Save changes' : 'Create task'}
             </button>
           </>
         }
       >
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="Title" span={2}>
-            <input className="sc-input" value={form.t} onChange={(e) => setForm({ ...form, t: e.target.value })}
-                   placeholder="What needs to be done?" data-testid="task-title" autoFocus />
-          </Field>
-          <Field label="Status">
-            <select className="sc-input" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as Status })}>
-              {columns.map(s => <option key={s}>{s}</option>)}
-            </select>
-          </Field>
-          <Field label="Priority">
-            <select className="sc-input" value={form.p} onChange={(e) => setForm({ ...form, p: e.target.value as Priority })}>
-              <option value="high">high</option><option value="med">med</option><option value="low">low</option>
-            </select>
-          </Field>
-          <Field label="Assignee">
-            <select className="sc-input" value={form.a} onChange={(e) => setForm({ ...form, a: e.target.value })}>
-              {assignees.map(a => <option key={a.i} value={a.i}>{a.n}</option>)}
-            </select>
-          </Field>
-          <Field label="Due">
-            <input className="sc-input" value={form.d} onChange={(e) => setForm({ ...form, d: e.target.value })} placeholder="e.g. Dec 24" />
-          </Field>
-          <Field label="Tags (comma separated)" span={2}>
-            <input className="sc-input"
-                   value={form.tags.join(', ')}
-                   onChange={(e) => setForm({ ...form, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
-                   placeholder="backend, infra, growth" />
-          </Field>
-        </div>
+        <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit(onSubmit)}>
+          <ScInput
+            label="Title"
+            placeholder="What needs to be done?"
+            data-testid="task-title"
+            wrapperClassName="col-span-2"
+            error={errors.t?.message as string}
+            {...register('t')}
+            autoFocus
+          />
+
+          <Controller
+            name="status"
+            control={control}
+            render={({ field }) => (
+              <ScSelect
+                label="Status"
+                value={field.value}
+                onChange={field.onChange}
+                options={columns.map(s => ({ label: s, value: s }))}
+                error={errors.status?.message as string}
+              />
+            )}
+          />
+
+          <Controller
+            name="p"
+            control={control}
+            render={({ field }) => (
+              <ScSelect
+                label="Priority"
+                value={field.value}
+                onChange={field.onChange}
+                options={[
+                  { label: 'high', value: 'high' },
+                  { label: 'med', value: 'med' },
+                  { label: 'low', value: 'low' },
+                ]}
+                error={errors.p?.message as string}
+              />
+            )}
+          />
+
+          <Controller
+            name="a"
+            control={control}
+            render={({ field }) => (
+              <ScSelect
+                label="Assignee"
+                value={field.value}
+                onChange={field.onChange}
+                options={assignees.map(a => ({ label: a.n, value: a.i }))}
+                error={errors.a?.message as string}
+              />
+            )}
+          />
+
+          <ScInput
+            label="Due"
+            placeholder="e.g. Dec 24"
+            error={errors.d?.message as string}
+            {...register('d')}
+          />
+
+          <ScInput
+            label="Tags (comma separated)"
+            placeholder="backend, infra, growth"
+            wrapperClassName="col-span-2"
+            error={errors.tagsString?.message as string}
+            {...register('tagsString')}
+          />
+        </form>
       </Drawer>
 
       <ConfirmDialog

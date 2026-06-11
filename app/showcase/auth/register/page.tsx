@@ -2,11 +2,37 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowRight, Eye, EyeOff, Check } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { registerSchema } from '@/components/showcase/schemas';
+import { ScInput, ScPasswordInput, ScCheckbox } from '@/components/showcase/FormFields';
 
 export default function RegisterPage() {
-  const [show, setShow] = React.useState(false);
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      password: '',
+      terms: true,
+    },
+  });
+
+  const onSubmit = (data: any) => {
+    console.log('Register Form Submitted:', data);
+    router.push('/showcase/auth/otp');
+  };
+
   return (
     <div className="sc-root sc-shell" data-testid="register-page">
       <div className="sc-aurora"><div className="blob3" /></div>
@@ -29,34 +55,46 @@ export default function RegisterPage() {
               Already have one? <Link href="/showcase/auth/login" style={{ color: 'var(--sc-accent)' }} className="underline" data-testid="login-link">Sign in</Link>
             </p>
 
-            <form className="space-y-4 mt-8" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
               <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>FIRST NAME</label>
-                  <input className="sc-input mt-1.5" placeholder="Akira" data-testid="firstname-input" />
-                </div>
-                <div>
-                  <label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>LAST NAME</label>
-                  <input className="sc-input mt-1.5" placeholder="Saito" data-testid="lastname-input" />
-                </div>
+                <ScInput
+                  label="FIRST NAME"
+                  placeholder="Akira"
+                  data-testid="firstname-input"
+                  error={errors.firstName?.message}
+                  {...register('firstName')}
+                />
+                <ScInput
+                  label="LAST NAME"
+                  placeholder="Saito"
+                  data-testid="lastname-input"
+                  error={errors.lastName?.message}
+                  {...register('lastName')}
+                />
               </div>
+              <ScInput
+                label="WORK EMAIL"
+                type="email"
+                placeholder="you@company.com"
+                data-testid="reg-email"
+                error={errors.email?.message}
+                {...register('email')}
+              />
+              <ScInput
+                label="MOBILE"
+                placeholder="+81 90-1234-5678"
+                data-testid="reg-mobile"
+                error={errors.phone?.message}
+                {...register('phone')}
+              />
               <div>
-                <label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>WORK EMAIL</label>
-                <input type="email" className="sc-input mt-1.5" placeholder="you@company.com" data-testid="reg-email" />
-              </div>
-              <div>
-                <label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>MOBILE</label>
-                <input className="sc-input mt-1.5" placeholder="+81 90-1234-5678" data-testid="reg-mobile" />
-              </div>
-              <div>
-                <label style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>PASSWORD</label>
-                <div className="relative mt-1.5">
-                  <input type={show ? 'text' : 'password'} className="sc-input pr-10"
-                         placeholder="At least 12 characters" data-testid="reg-password" />
-                  <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-1/2 -translate-y-1/2 p-1" style={{ color: 'var(--sc-text-faint)' }}>
-                    {show ? <EyeOff size={14} /> : <Eye size={14} />}
-                  </button>
-                </div>
+                <ScPasswordInput
+                  label="PASSWORD"
+                  placeholder="At least 6 characters"
+                  data-testid="reg-password"
+                  error={errors.password?.message}
+                  {...register('password')}
+                />
                 <div className="grid grid-cols-4 gap-1 mt-2">
                   {[1,2,3,4].map(i => (
                     <div key={i} className="h-1 rounded-full" style={{ background: i <= 3 ? 'var(--sc-accent)' : 'rgba(255,255,255,0.1)' }} />
@@ -65,12 +103,18 @@ export default function RegisterPage() {
                 <div style={{ fontSize: 10, color: 'var(--sc-text-faint)', marginTop: 6 }}>Strong — well done.</div>
               </div>
 
-              <label className="flex items-start gap-2" style={{ fontSize: 11, color: 'var(--sc-text-dim)' }}>
-                <input type="checkbox" defaultChecked data-testid="reg-terms" className="mt-0.5" />
-                I agree to the <Link href="#" style={{ color: 'var(--sc-accent)' }}>Terms</Link> and <Link href="#" style={{ color: 'var(--sc-accent)' }}>Privacy Policy</Link>.
-              </label>
+              <ScCheckbox
+                label={
+                  <span>
+                    I agree to the <Link href="#" style={{ color: 'var(--sc-accent)' }}>Terms</Link> and <Link href="#" style={{ color: 'var(--sc-accent)' }}>Privacy Policy</Link>.
+                  </span>
+                }
+                data-testid="reg-terms"
+                error={errors.terms?.message}
+                {...register('terms')}
+              />
 
-              <button className="sc-btn sc-btn-primary w-full justify-center" data-testid="register-submit">
+              <button type="submit" className="sc-btn sc-btn-primary w-full justify-center" data-testid="register-submit">
                 Create account <ArrowRight size={14} />
               </button>
             </form>
