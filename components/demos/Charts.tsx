@@ -75,7 +75,7 @@ export function AreaChart({
       ))}
       {labels && labels.map((lab, i) => (
         <text key={i} x={pad + i * step} y={h - 8} textAnchor="middle"
-              fill="rgba(0,0,0,0.4)" fontSize="10" fontFamily="monospace">
+          fill="rgba(0,0,0,0.4)" fontSize="10" fontFamily="monospace">
           {lab}
         </text>
       ))}
@@ -111,9 +111,9 @@ export function BarChart({
       </defs>
       {Array.from({ length: 4 }).map((_, i) => (
         <line key={i} x1={pad} x2={w - pad}
-              y1={pad + (i * (h - pad * 2)) / 3}
-              y2={pad + (i * (h - pad * 2)) / 3}
-              stroke="rgba(0,0,0,0.05)" strokeDasharray="2 4" />
+          y1={pad + (i * (h - pad * 2)) / 3}
+          y2={pad + (i * (h - pad * 2)) / 3}
+          stroke="rgba(0,0,0,0.05)" strokeDasharray="2 4" />
       ))}
       {data.map((v, i) => {
         const x = pad + i * ((w - pad * 2) / data.length) + 3;
@@ -130,7 +130,7 @@ export function BarChart({
             />
             {labels && (
               <text x={x + barWidth / 2} y={h - 8} textAnchor="middle"
-                    fill="rgba(0,0,0,0.5)" fontSize="10" fontFamily="monospace">
+                fill="rgba(0,0,0,0.5)" fontSize="10" fontFamily="monospace">
                 {labels[i]}
               </text>
             )}
@@ -162,7 +162,7 @@ export function DonutChart({
   return (
     <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-auto">
       <circle cx={size / 2} cy={size / 2} r={r} fill="none"
-              stroke="rgba(0,0,0,0.05)" strokeWidth={thickness} />
+        stroke="rgba(0,0,0,0.05)" strokeWidth={thickness} />
       {segments.map((s, i) => {
         const len = (s.value / total) * c;
         const dash = `${len} ${c}`;
@@ -183,13 +183,13 @@ export function DonutChart({
       })}
       {centerLabel && (
         <text x={size / 2} y={size / 2 - 4} textAnchor="middle"
-              fill="var(--sc-text)" fontSize="22" fontFamily="Instrument Serif, Georgia, serif">
+          fill="var(--sc-text)" fontSize="22" fontFamily="Instrument Serif, Georgia, serif">
           {centerLabel}
         </text>
       )}
       {centerSubLabel && (
         <text x={size / 2} y={size / 2 + 16} textAnchor="middle"
-              fill="rgba(0,0,0,0.5)" fontSize="10" fontFamily="monospace">
+          fill="rgba(0,0,0,0.5)" fontSize="10" fontFamily="monospace">
           {centerSubLabel}
         </text>
       )}
@@ -205,9 +205,9 @@ export function RadialGauge({ value, max = 100, color = '#b6ff3c', size = 160, l
   const c = 2 * Math.PI * r;
   const pct = value / max;
   return (
-    <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-auto">
+    <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-[250px]">
       <circle cx={size / 2} cy={size / 2} r={r} fill="none"
-              stroke="rgba(0,0,0,0.06)" strokeWidth="10" />
+        stroke="rgba(0,0,0,0.06)" strokeWidth="10" />
       <motion.circle
         cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth="10"
         strokeDasharray={c} strokeLinecap="round"
@@ -218,12 +218,12 @@ export function RadialGauge({ value, max = 100, color = '#b6ff3c', size = 160, l
         style={{ filter: `drop-shadow(0 0 8px ${color})` }}
       />
       <text x={size / 2} y={size / 2 - 2} textAnchor="middle"
-            fill="var(--sc-text)" fontSize="28" fontFamily="Instrument Serif, Georgia, serif">
+        fill="var(--sc-text)" fontSize="28" fontFamily="Instrument Serif, Georgia, serif">
         {Math.round(value)}%
       </text>
       {label && (
         <text x={size / 2} y={size / 2 + 18} textAnchor="middle"
-              fill="rgba(0,0,0,0.5)" fontSize="10" fontFamily="monospace">
+          fill="rgba(0,0,0,0.5)" fontSize="10" fontFamily="monospace">
           {label}
         </text>
       )}
@@ -277,9 +277,9 @@ export function MultiLineChart({ series, height = 240, labels }: {
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto">
       {Array.from({ length: 4 }).map((_, i) => (
         <line key={i} x1={pad} x2={w - pad}
-              y1={pad + (i * (h - pad * 2)) / 3}
-              y2={pad + (i * (h - pad * 2)) / 3}
-              stroke="rgba(0,0,0,0.05)" strokeDasharray="2 4" />
+          y1={pad + (i * (h - pad * 2)) / 3}
+          y2={pad + (i * (h - pad * 2)) / 3}
+          stroke="rgba(0,0,0,0.05)" strokeDasharray="2 4" />
       ))}
       {series.map((s, si) => {
         const path = s.data.map((v, i) => {
@@ -299,7 +299,7 @@ export function MultiLineChart({ series, height = 240, labels }: {
       })}
       {labels && labels.map((lab, i) => (
         <text key={i} x={pad + i * step} y={h - 10} textAnchor="middle"
-              fill="rgba(0,0,0,0.4)" fontSize="10" fontFamily="monospace">
+          fill="rgba(0,0,0,0.4)" fontSize="10" fontFamily="monospace">
           {lab}
         </text>
       ))}
@@ -354,7 +354,7 @@ export function Sparkline({ data, color = '#b6ff3c', height = 36 }: { data: numb
   return (
     <svg viewBox={`0 0 ${w} ${height}`} className="w-full h-auto">
       <motion.path d={path} fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round"
-                   initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1 }} />
+        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1 }} />
     </svg>
   );
 }

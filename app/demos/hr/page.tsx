@@ -62,8 +62,8 @@ export default function HRPage() {
           ]} />
           <div className="grid grid-cols-2 gap-2 mt-4 text-xs">
             {[
-              {l:'Engineering',v:94,c:'#b6ff3c'},{l:'Operations',v:56,c:'#6affe0'},
-              {l:'Sales',v:42,c:'#ff6bcb'},{l:'HR/Finance',v:28,c:'#7a5cff'},
+              { l: 'Engineering', v: 94, c: '#b6ff3c' }, { l: 'Operations', v: 56, c: '#6affe0' },
+              { l: 'Sales', v: 42, c: '#ff6bcb' }, { l: 'HR/Finance', v: 28, c: '#7a5cff' },
             ].map(d => (
               <div key={d.l} className="flex items-center justify-between p-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
                 <span className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full" style={{ background: d.c }} />{d.l}</span>
@@ -135,6 +135,11 @@ export default function HRPage() {
               { n: 'Hiroko Sato', a: 'HS', t: 'Sick leave', d: 'Tomorrow', s: 'approved', c: '#5cf2a3' },
               { n: 'Marcus Hale', a: 'MH', t: 'Personal', d: 'Dec 12', s: 'approved', c: '#5cf2a3' },
               { n: 'Sofia Reyes', a: 'SR', t: 'Vacation', d: 'Jan 2 – Jan 8', s: 'pending', c: '#ffb547' },
+              { n: 'Ren Okada', a: 'RO', t: 'Vacation', d: 'Dec 18 – Dec 24', s: 'pending', c: '#ffb547' },
+              { n: 'Hiroko Sato', a: 'HS', t: 'Sick leave', d: 'Tomorrow', s: 'approved', c: '#5cf2a3' },
+              { n: 'Marcus Hale', a: 'MH', t: 'Personal', d: 'Dec 12', s: 'approved', c: '#5cf2a3' },
+              { n: 'Sofia Reyes', a: 'SR', t: 'Vacation', d: 'Jan 2 – Jan 8', s: 'pending', c: '#ffb547' },
+              { n: 'Ren Okada', a: 'RO', t: 'Vacation', d: 'Dec 18 – Dec 24', s: 'pending', c: '#ffb547' },
             ].map((r, i) => (
               <div key={i} className="flex items-center gap-3">
                 <div className="sc-avatar" style={{ background: `linear-gradient(135deg, ${r.c}, ${r.c}77)`, width: 32, height: 32 }}>{r.a}</div>
@@ -159,7 +164,7 @@ export default function HRPage() {
           <span className="sc-chip sc-chip-success">+24% YoY</span>
         </div>
         <AreaChart height={220} color="#7a5cff" color2="#ff6bcb"
-          labels={['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']}
+          labels={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']}
           data={[182, 188, 196, 204, 212, 218, 224, 230, 236, 242, 246, 248]} />
       </motion.div>
     </DashboardShell>

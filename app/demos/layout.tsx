@@ -1,6 +1,7 @@
 import './demos.css';
 import { Instrument_Serif, JetBrains_Mono, Geist } from 'next/font/google';
 import { ToastProvider } from '@/components/demos/Interactions';
+import BackgroundEffects from '@/components/BackgroundEffects';
 
 const display = Instrument_Serif({ subsets: ['latin'], weight: '400', variable: '--font-display' });
 const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
@@ -14,6 +15,7 @@ export const metadata = {
 export default function ShowcaseLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className={`${display.variable} ${mono.variable} ${sans.variable}`}>
+      <BackgroundEffects />
       <ToastProvider>{children}</ToastProvider>
     </div>
   );

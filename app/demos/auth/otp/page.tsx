@@ -5,11 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Shield, ArrowRight } from 'lucide-react';
-<<<<<<< HEAD:app/showcase/auth/otp/page.tsx
-import { ScFormError } from '@/components/showcase/FormFields';
-=======
 import { ScFormError } from '@/components/demos/FormFields';
->>>>>>> 42fd257aafd27a120ccb1129f1b62a7137460387:app/demos/auth/otp/page.tsx
 
 export default function OTPPage() {
   const router = useRouter();
@@ -37,11 +33,7 @@ export default function OTPPage() {
       return;
     }
     console.log('OTP Verified:', code);
-<<<<<<< HEAD:app/showcase/auth/otp/page.tsx
-    router.push('/showcase');
-=======
     router.push('/demos');
->>>>>>> 42fd257aafd27a120ccb1129f1b62a7137460387:app/demos/auth/otp/page.tsx
   };
 
   return (
@@ -74,13 +66,8 @@ export default function OTPPage() {
                 onChange={(e) => update(i, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
                 maxLength={1}
-<<<<<<< HEAD:app/showcase/auth/otp/page.tsx
-                className={`sc-input text-center ${error ? 'sc-input-error' : ''}`}
-                style={{ width: 48, height: 56, fontSize: 22, fontFamily: 'Instrument Serif, serif' }}
-=======
                 className={`sc-input text-center flex-1 ${error ? 'sc-input-error' : ''}`}
                 style={{ maxWidth: 48, height: 52, fontSize: 22, fontFamily: 'Instrument Serif, serif' }}
->>>>>>> 42fd257aafd27a120ccb1129f1b62a7137460387:app/demos/auth/otp/page.tsx
                 data-testid={`otp-digit-${i}`}
               />
             ))}

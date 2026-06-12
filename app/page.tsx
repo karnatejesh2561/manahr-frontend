@@ -7,14 +7,14 @@ import AboutSection from '@/components/AboutSection';
 import CTASection from '@/components/CTASection';
 
 export default function Home() {
-  return (
-    <>
-      <Hero />
-      <Services />
-      <CaseStudies />
-      <TechStack />
-      <AboutSection />
-      <CTASection />
-    </>
-  );
+    return (
+        <>
+            <Hero />
+            <Services />
+            <CaseStudies />
+            <TechStack />
+            <AboutSection />
+            <CTASection />
+        </>
+    );
 }

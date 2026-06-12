@@ -3,72 +3,87 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { ArrowUpRight, ExternalLink } from 'lucide-react';
 
 interface DemoCardProps {
-  href: string;
-  title: string;
-  desc: string;
-  icon: React.ElementType;
-  accent: string;
-  preview: () => React.ReactNode;
-  tags: string[];
-  index: number;
+    href: string;
+    title: string;
+    desc: string;
+    icon: React.ElementType;
+    accent: string;
+    preview: () => React.ReactNode;
+    tags: string[];
+    index: number;
+    image?: string;
 }
 
-export default function DemoCard({ href, title, desc, icon: Icon, accent, preview, tags, index }: DemoCardProps) {
-  return (
-    <Link href={href} className="block group">
-      <motion.div
-        className="flex flex-col bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.05 }}
-      >
-        {/* Browser Top Bar */}
-        <div className="bg-[#f5f5f5] border-b border-neutral-200 px-3 py-2 flex items-center gap-4">
-          {/* macOS dots */}
-          <div className="flex gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-            <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-            <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-          </div>
-          {/* URL bar */}
-          <div className="flex-1 bg-white border border-neutral-200/60 rounded-md text-[10px] text-center py-1 text-neutral-400 font-mono truncate px-2 shadow-sm">
-            manatech.com{href}
-          </div>
-          {/* Placeholder for right side to balance flex */}
-          <div className="w-[42px]" />
-        </div>
+export default function DemoCard({ href, title, desc, icon: Icon, accent, preview, tags, index, image }: DemoCardProps) {
+    return (
+        <Link href={href} className="block group">
+            <motion.div
+                className="glass flex flex-col border border-neutral-200 rounded-xl overflow-hidden bg-white"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+            >
+                {/* Browser Top Bar */}
+                <div className="bg-neutral-50 border-b border-neutral-200 px-3 py-2 flex items-center gap-4">
+                    {/* macOS dots */}
+                    <div className="flex gap-1.5 w-[42px] shrink-0">
+                        <div className="w-2 h-2 rounded-full bg-[#ff5f56] opacity-75" />
+                        <div className="w-2 h-2 rounded-full bg-[#ffbd2e] opacity-75" />
+                        <div className="w-2 h-2 rounded-full bg-[#27c93f] opacity-75" />
+                    </div>
+                    {/* URL bar */}
+                    <div className="flex-1 bg-white border border-neutral-200/80 rounded-md text-[10px] text-center py-0.5 text-neutral-400 font-mono truncate px-2 shadow-sm">
+                        manatech.com{href}
+                    </div>
+                    {/* External Link Icon */}
+                    <div className="w-[42px] shrink-0 flex justify-end">
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                window.open(href, '_blank');
+                            }}
+                            className="p-1 rounded-md hover:bg-neutral-200/50 text-neutral-400 hover:text-neutral-700 transition-colors cursor-pointer flex items-center justify-center"
+                            aria-label="Open in new tab"
+                            title="Open in new tab"
+                        >
+                            <ExternalLink size={14} />
+                        </button>
+                    </div>
+                </div>
 
-        {/* Preview Area (Visuals) */}
-        <div className="h-[180px] w-full bg-[#fafafa] border-b border-neutral-100 flex items-center justify-center p-4 relative overflow-hidden group-hover:bg-[#f3f3f3] transition-colors">
-          {/* Background dot pattern inside preview */}
-          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #ccc 1px, transparent 0)', backgroundSize: '12px 12px' }} />
-          <div className="relative z-10 w-full h-full flex items-center justify-center">
-            {preview()}
-          </div>
-        </div>
+                {/* Preview Area (Visuals) */}
+                <div className="bg-white h-[250px] w-full border-none flex items-center justify-center p-2 relative overflow-hidden z-2">
+                    {/* Background dot pattern inside preview */}
+                    <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #ccc 1px, transparent 0)', backgroundSize: '12px 12px' }} />
+                    <div className="relative z-10 w-full h-full flex items-center justify-center">
 
-        {/* Content Area */}
-        <div className="p-5 flex flex-col flex-1 bg-white">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="p-1 rounded-md" style={{ backgroundColor: `${accent}20` }}>
-              <Icon size={14} style={{ color: accent === '#ffffff' ? '#000' : accent }} />
-            </div>
-            <h3 className="font-semibold text-neutral-900 text-sm tracking-tight">{title}</h3>
-          </div>
-          <p className="text-xs text-neutral-500 mb-4 line-clamp-2 leading-relaxed">
-            {desc}
-          </p>
-          <div className="mt-auto flex flex-wrap gap-1.5">
-            {tags.map(t => (
-              <span key={t} className="text-[9px] font-medium tracking-wide uppercase px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 border border-neutral-200/60">
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-    </Link>
-  );
+                        {image ? (
+                            <div className="w-full h-full relative overflow-hidden rounded-md border border-neutral-200">
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                                <img
+                                    src={image}
+                                    alt={title}
+                                    className="w-full h-full object-cover object-top transition-transform duration-500"
+                                />
+
+                                <Link
+                                    href={href}
+                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-medium border border-white/20 bg-white transition-all duration-300 absolute bottom-10 left-1/2 -translate-x-1/2 translate-y-1/2 opacity-0 group-hover:opacity-100 "
+                                >
+                                    Visit Demo
+                                    <ArrowUpRight size={18} />
+                                </Link>
+                            </div>
+                        ) : (
+                            preview()
+                        )}
+                    </div>
+                </div>
+            </motion.div>
+        </Link>
+    );
 }

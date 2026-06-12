@@ -3,15 +3,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Plus, AlertTriangle, Package, Truck, Warehouse, Boxes, Filter } from 'lucide-react';
-<<<<<<< HEAD:app/showcase/inventory/page.tsx
-import DashboardShell from '@/components/showcase/DashboardShell';
-import { BarChart, DonutChart, AnimatedNumber, Sparkline } from '@/components/showcase/Charts';
-import { Drawer, ConfirmDialog, FilterPanel, FilterChip, RowMenu, useToast } from '@/components/showcase/Interactions';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { inventorySchema } from '@/components/showcase/schemas';
-import { ScInput, ScSelect } from '@/components/showcase/FormFields';
-=======
 import DashboardShell from '@/components/demos/DashboardShell';
 import { BarChart, DonutChart, AnimatedNumber, Sparkline } from '@/components/demos/Charts';
 import { Drawer, ConfirmDialog, FilterPanel, FilterChip, RowMenu, useToast } from '@/components/demos/Interactions';
@@ -19,7 +10,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { inventorySchema } from '@/components/demos/schemas';
 import { ScInput, ScSelect } from '@/components/demos/FormFields';
->>>>>>> 42fd257aafd27a120ccb1129f1b62a7137460387:app/demos/inventory/page.tsx
 
 type Product = { sku: string; n: string; stock: number; sold: number; reorder: number; cat: string; s: number[] };
 
@@ -70,11 +60,7 @@ export default function InventoryPage() {
   };
   const openEdit = (p: Product) => {
     setEditing(p);
-<<<<<<< HEAD:app/showcase/inventory/page.tsx
     reset({ sku: p.sku, n: p.n, stock: p.stock, sold: p.sold, reorder: p.reorder, cat: p.cat });
-=======
-    reset({ sku: p.sku, n: p.n, stock: p.stock, reorder: p.reorder, cat: p.cat });
->>>>>>> 42fd257aafd27a120ccb1129f1b62a7137460387:app/demos/inventory/page.tsx
     setDrawerOpen(true);
   };
   const onSubmit = (data: any) => {
