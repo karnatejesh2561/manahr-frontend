@@ -11,7 +11,7 @@ export default function DashboardShell({
     breadcrumb,
     actions,
 }: {
-    title: string;
+    title?: string;
     subtitle?: string;
     children: React.ReactNode;
     breadcrumb?: string[];
