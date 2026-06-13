@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 const siteName = 'ManaTech';
 const siteDescription = 'ManaTech builds scalable SaaS platforms, enterprise software, and modern digital products for growing businesses.';
 const siteUrl = new URL('https://manatech-murex.vercel.app/');
-const defaultImage = new URL('/logo.svg', siteUrl).toString();
+const defaultImage = new URL('logo-m.svg/', siteUrl).toString();
 const twitterHandle = '@manatechio';
 const defaultKeywords = [
   'ManaTech',
@@ -69,8 +69,8 @@ export const siteMetadata: Metadata = {
     site: twitterHandle,
   },
   icons: {
-    icon: '/logo.svg',
-    apple: '/logo.svg',
+    icon: '/logo-m.svg',
+    apple: '/logo-m.svg',
   },
   verification: {
     google: 'YOUR_GOOGLE_SITE_VERIFICATION_CODE',
