@@ -5,6 +5,14 @@ import CaseStudies from '@/components/CaseStudies';
 import TechStack from '@/components/TechStack';
 import AboutSection from '@/components/AboutSection';
 import CTASection from '@/components/CTASection';
+import { createPageMetadata } from '@/lib/seo';
+
+export const metadata = createPageMetadata({
+    title: 'Premium SaaS & Digital Solutions',
+    description: 'ManaTech builds scalable SaaS platforms, enterprise software, and modern digital products for growing businesses.',
+    path: '/',
+    keywords: ['SaaS development', 'enterprise software', 'digital product agency'],
+});
 
 export default function Home() {
     return (

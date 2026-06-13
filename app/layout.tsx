@@ -2,13 +2,11 @@ import type { Metadata } from 'next';
 import { Urbanist } from 'next/font/google';
 import './globals.css';
 import MarketingChrome from '@/components/MarketingChrome';
+import { siteMetadata } from '@/lib/seo';
 
-const urbanist = Urbanist({ subsets: ['latin'], weight: ['400','600','700'] });
+const urbanist = Urbanist({ subsets: ['latin'], weight: ['400', '600', '700'] });
 
-export const metadata: Metadata = {
-  title: 'ManaTech | Premium SaaS & Digital Solutions',
-  description: 'Building scalable SaaS platforms and intelligent digital solutions for modern businesses',
-};
+export const metadata: Metadata = siteMetadata;
 
 export default function RootLayout({
   children,
