@@ -27,7 +27,7 @@ export default function ContactPageContent() {
             `Message:\n${formData.message}`
         );
 
-        window.location.href = `mailto:manatech.services.official@gmail.com?subject=${subject}&body=${body}`;
+        window.location.href = `mailto:manatechservices.support@gmail.com?subject=${subject}&body=${body}`;
     };
 
     return (
@@ -150,8 +150,8 @@ export default function ContactPageContent() {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-black mb-1">Email</h3>
-                                        <a href="mailto:hello@manatech.com" className="text-black/70 hover:text-black transition-colors">
-                                            hello@manatech.com
+                                        <a href="mailto:manatechservices.support@gmail.com" className="text-black/70 hover:text-black transition-colors">
+                                            manatechservices.support@gmail.com
                                         </a>
                                     </div>
                                 </div>

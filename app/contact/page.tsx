@@ -11,5 +11,3 @@ export const metadata = createPageMetadata({
 export default function ContactPage() {
   return <ContactPageContent />;
 }
-
-

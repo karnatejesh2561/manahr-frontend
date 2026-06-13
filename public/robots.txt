@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /.next/
+Disallow: /private/
+Disallow: *.json$
+
+Sitemap: https://manatech-murex.vercel.app/sitemap.xml
+
+# Rate limiting for crawlers
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+# Respect all other crawlers
+User-agent: Googlebot
+Crawl-delay: 0

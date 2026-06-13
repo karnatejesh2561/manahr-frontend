@@ -73,7 +73,7 @@ const Navbar: React.FC = () => {
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <a href="mailto:manatech.services.official@gmail.com?subject=Book a Call Request&body=Hi, I would like to schedule a call to discuss my project.">
+            <a href="mailto:manatechservices.support@gmail.com?subject=Book a Call Request&body=Hi, I would like to schedule a call to discuss my project.">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -127,7 +127,7 @@ const Navbar: React.FC = () => {
                 transition={{ delay: navLinks.length * 0.1 }}
                 className="pt-2"
               >
-                <a href="mailto:manatech.services.official@gmail.com?subject=Book a Call Request&body=Hi, I would like to schedule a call to discuss my project." onClick={() => setIsOpen(false)}>
+                <a href="mailto:manatechservices.support@gmail.com?subject=Book a Call Request&body=Hi, I would like to schedule a call to discuss my project." onClick={() => setIsOpen(false)}>
                   <button className="w-full px-6 py-3.5 sm:py-3 bg-black text-white font-semibold rounded-full glow text-base sm:text-sm">
                     Book a Call
                   </button>

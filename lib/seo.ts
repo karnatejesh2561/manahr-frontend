@@ -9,12 +9,14 @@ const defaultKeywords = [
   'ManaTech',
   'SaaS development',
   'enterprise software',
-  'Next.js',
-  'React',
-  'web development',
-  'mobile apps',
+  'Next.js development',
+  'React development',
+  'web development agency',
+  'mobile app development',
   'cloud infrastructure',
   'digital transformation',
+  'custom software development',
+  'startup technology',
 ];
 
 export const siteMetadata: Metadata = {
@@ -28,6 +30,13 @@ export const siteMetadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   alternates: {
     canonical: siteUrl.toString(),
@@ -42,7 +51,14 @@ export const siteMetadata: Metadata = {
     siteName,
     locale: 'en_US',
     type: 'website',
-    images: [defaultImage],
+    images: [
+      {
+        url: defaultImage,
+        width: 1200,
+        height: 630,
+        alt: 'ManaTech - SaaS & Digital Solutions',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
@@ -50,10 +66,14 @@ export const siteMetadata: Metadata = {
     description: siteDescription,
     creator: twitterHandle,
     images: [defaultImage],
+    site: twitterHandle,
   },
   icons: {
     icon: '/logo.svg',
     apple: '/logo.svg',
+  },
+  verification: {
+    google: 'YOUR_GOOGLE_SITE_VERIFICATION_CODE',
   },
 };
 
@@ -63,6 +83,8 @@ interface CreatePageMetadataOptions {
   path?: string;
   keywords?: string[];
   image?: string;
+  author?: string;
+  ogType?: 'website' | 'article' | 'business.business';
 }
 
 export function createPageMetadata({
@@ -71,6 +93,8 @@ export function createPageMetadata({
   path = '/',
   keywords = [],
   image,
+  author = 'ManaTech',
+  ogType = 'website',
 }: CreatePageMetadataOptions): Metadata {
   const normalizedTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
   const url = new URL(path, siteUrl);
@@ -81,9 +105,18 @@ export function createPageMetadata({
     description,
     metadataBase: siteUrl,
     keywords: [...defaultKeywords, ...keywords],
+    authors: [{ name: author }],
+    creator: author,
     robots: {
       index: true,
       follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
     alternates: {
       canonical: url.toString(),
@@ -97,8 +130,15 @@ export function createPageMetadata({
       url,
       siteName,
       locale: 'en_US',
-      type: 'website',
-      images,
+      type: ogType as any,
+      images: [
+        {
+          url: images[0],
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
@@ -106,10 +146,74 @@ export function createPageMetadata({
       description,
       creator: twitterHandle,
       images,
-    },
-    icons: {
-      icon: '/logo.svg',
-      apple: '/logo.svg',
+      site: twitterHandle,
     },
   };
 }
+
+// JSON-LD Schema helpers
+export const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'ManaTech',
+  url: siteUrl.toString(),
+  logo: defaultImage,
+  description: siteDescription,
+  sameAs: [
+    'https://twitter.com/manatechio',
+    'https://github.com/manatech',
+  ],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'Customer Service',
+    email: 'manatechservices.support@gmail.com',
+    availableLanguage: 'en-US',
+  },
+  foundingDate: '2026-03-01',
+  areaServed: 'Worldwide',
+  serviceType: [
+    'SaaS Development',
+    'Enterprise Software',
+    'Web Development',
+    'Mobile App Development',
+    'Cloud Infrastructure',
+  ],
+};
+
+export const serviceSchema = (serviceName: string, serviceDescription: string) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: serviceName,
+  description: serviceDescription,
+  provider: {
+    '@type': 'Organization',
+    name: 'ManaTech',
+    url: siteUrl.toString(),
+  },
+  areaServed: 'Worldwide',
+});
+
+export const faqSchema = (faqs: Array<{ question: string; answer: string }>) => ({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+});
+
+export const breadcrumbSchema = (items: Array<{ name: string; url: string }>) => ({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.name,
+    item: item.url,
+  })),
+});
+
