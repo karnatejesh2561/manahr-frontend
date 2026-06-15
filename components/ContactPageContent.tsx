@@ -183,8 +183,7 @@ export default function ContactPageContent() {
                                     <div>
                                         <h3 className="font-semibold text-black mb-1">Location</h3>
                                         <p className="text-black/70">
-                                            Remote-First<br />
-                                            Serving Clients Worldwide
+                                            Nellore 524004,  Andhra Pradesh, India
                                         </p>
                                     </div>
                                 </div>
