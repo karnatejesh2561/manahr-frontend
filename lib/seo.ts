@@ -162,6 +162,8 @@ export const organizationSchema = {
   sameAs: [
     'https://twitter.com/manatechio',
     'https://github.com/manatech',
+    'https://www.linkedin.com/in/manatech-services',
+    'https://www.instagram.com/manatechservices',
   ],
   contactPoint: {
     '@type': 'ContactPoint',
@@ -216,4 +218,3 @@ export const breadcrumbSchema = (items: Array<{ name: string; url: string }>) =>
     item: item.url,
   })),
 });
-
