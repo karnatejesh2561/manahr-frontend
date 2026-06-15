@@ -20,7 +20,7 @@ export default function RootLayout({
                 <SchemaMarkup />
                 <meta name="theme-color" content="#000000" />
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-                <meta name="google-site-verification" content="google9ce85ca39878740a" />
+                <meta name="google-site-verification" content="u9_wFCu0ItRZe-dVOPVuveJU41okrKh7myhbZr7SaPc" />
                 <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
