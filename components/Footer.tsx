@@ -20,13 +20,13 @@ const Footer: React.FC = () => {
                             Building scalable SaaS platforms and intelligent digital solutions for modern businesses.
                         </p>
                         <div className="flex space-x-5 justify-center sm:justify-start">
-                            <a href="https://www.linkedin.com/in/manatech-services" className=" rounded-lg hover:text-white text-white/70 transition-colors">
+                            <a href="https://www.linkedin.com/in/manatech-services" target='_blank' className=" rounded-lg hover:text-white text-white/70 transition-colors">
                                 <BsLinkedin size={20} />
                             </a>
-                            <a href="https://www.instagram.com/manatechservices" className=" rounded-lg hover:text-white text-white/70 transition-colors">
+                            <a href="https://www.instagram.com/manatechservices" target='_blank' className=" rounded-lg hover:text-white text-white/70 transition-colors">
                                 <BsInstagram size={20} />
                             </a>
-                            <a href="mailto:manatech.services.official@gmail.com" className=" rounded-lg hover:text-white text-white/70 transition-colors">
+                            <a href="mailto:manatech.services.official@gmail.com" target='_blank' className=" rounded-lg hover:text-white text-white/70 transition-colors">
                                 <BsEnvelope size={20} />
                             </a>
                         </div>
