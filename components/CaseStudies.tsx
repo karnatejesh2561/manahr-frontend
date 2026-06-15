@@ -49,7 +49,7 @@ const CaseStudies: React.FC = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group"
             >
-                <div className="glass rounded-3xl p-8 h-full border border-white/20 hover:border-black/30 transition-all duration-300 hover:shadow-xl">
+              <div className="glass rounded-3xl p-8 h-full border border-white/20 hover:border-[#0e67ff]/40 transition-all duration-300 hover:shadow-xl">
                 {/* Header */}
                 <div className="flex justify-between items-start mb-6">
                   <div>
@@ -58,7 +58,7 @@ const CaseStudies: React.FC = () => {
                   </div>
                   <motion.div
                     whileHover={{ scale: 1.1, rotate: 45 }}
-                    className={`w-10 h-10 rounded-full bg-black flex items-center justify-center`}
+                    className={`w-10 h-10 rounded-full bg-[#0e67ff] flex items-center justify-center`}
                   >
                     <ArrowUpRight size={20} className="text-white" />
                   </motion.div>

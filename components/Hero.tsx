@@ -16,8 +16,8 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="mb-6"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium text-black">
-            <Sparkles size={16} className="text-black" />
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium text-[#0e67ff]">
+            <Sparkles size={16} className="text-[#0e67ff]" />
             Crafting Digital Excellence
           </span>
         </motion.div>
@@ -55,7 +55,7 @@ const Hero: React.FC = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="group px-8 py-4 bg-black text-white font-semibold rounded-full glow flex items-center gap-2 transition-all duration-300"
+              className="group px-8 py-4 bg-[#0e67ff] text-white font-semibold rounded-full glow flex items-center gap-2 transition-all duration-300 hover:bg-[#0858d6]"
             >
               Start Your Project
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -66,7 +66,7 @@ const Hero: React.FC = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 glass border-2 border-black text-black font-semibold rounded-full hover:bg-black/10 transition-all duration-300"
+              className="px-8 py-4 glass border-2 border-[#0e67ff] text-[#0e67ff] font-semibold rounded-full hover:bg-[#0e67ff]/10 transition-all duration-300"
             >
               View Our Work
             </motion.button>
@@ -85,7 +85,7 @@ const Hero: React.FC = () => {
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <ChevronDown size={32} className="text-black/30" />
+          <ChevronDown size={32} className="text-[#0e67ff]/30" />
         </motion.div>
       </motion.div>
     </section>

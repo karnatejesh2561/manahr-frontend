@@ -116,7 +116,7 @@ export default function ContactPageContent() {
                                         onChange={handleChange}
                                         required
                                         rows={6}
-                                        className="w-full px-4 py-3 rounded-xl glass border border-white/20 focus:border-black focus:outline-none focus:ring-2 focus:ring-black/20 transition-all text-black placeholder-black/40 resize-none"
+                                        className="w-full px-4 py-3 rounded-xl glass border border-white/20 focus:border-[#0e67ff] focus:outline-none focus:ring-2 focus:ring-[#0e67ff]/20 transition-all text-black placeholder-black/40 resize-none"
                                         placeholder="Tell us about your project..."
                                     />
                                 </div>
@@ -125,7 +125,7 @@ export default function ContactPageContent() {
                                     type="submit"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="w-full px-8 py-4 font-semibold rounded-full flex items-center justify-center gap-2 transition-all duration-300 bg-black text-white glow hover:shadow-xl"
+                                    className="w-full px-8 py-4 font-semibold rounded-full flex items-center justify-center gap-2 transition-all duration-300 bg-[#0e67ff] text-white glow hover:bg-[#0858d6] hover:shadow-xl"
                                 >
                                     Send Message
                                     <Send size={20} />
@@ -145,31 +145,35 @@ export default function ContactPageContent() {
 
                             <div className="space-y-6">
                                 <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center flex-shrink-0">
+                                    <div className="w-12 h-12 rounded-xl bg-[#0e67ff] flex items-center justify-center flex-shrink-0">
                                         <Mail size={24} className="text-white" />
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-black mb-1">Email</h3>
-                                        <a href="mailto:manatechservices.support@gmail.com" className="text-black/70 hover:text-black transition-colors">
+                                        <a href="mailto:manatechservices.support@gmail.com" className="text-[#0e67ff]/80 hover:text-[#0e67ff] transition-colors">
                                             manatechservices.support@gmail.com
                                         </a>
                                     </div>
                                 </div>
 
                                 <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center flex-shrink-0">
+                                    <div className="w-12 h-12 rounded-xl bg-[#0e67ff] flex items-center justify-center flex-shrink-0">
                                         <Phone size={24} className="text-white" />
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-black mb-1">Phone</h3>
-                                        <a href="tel:+1234567890" className="text-black/70 hover:text-black transition-colors">
-                                            +1 (234) 567-890
+                                        <a href="tel:+91 7013244681" className="text-black/70 hover:text-black transition-colors">
+                                            +91 7013244681
+                                        </a>
+                                        {','}
+                                        <a href="tel:+91 8309992561" className="text-black/70 hover:text-black transition-colors">
+                                            +91 8309992561
                                         </a>
                                     </div>
                                 </div>
 
                                 <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center flex-shrink-0">
+                                    <div className="w-12 h-12 rounded-xl bg-[#0e67ff] flex items-center justify-center flex-shrink-0">
                                         <MapPin size={24} className="text-white" />
                                     </div>
                                     <div>

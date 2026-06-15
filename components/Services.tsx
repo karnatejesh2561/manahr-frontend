@@ -68,19 +68,19 @@ const Services: React.FC = () => {
                 whileHover={{ y: -5 }}
                 className="group relative"
               >
-                <div className="glass rounded-3xl p-8 h-full border border-white/20 hover:border-black/30 transition-all duration-300">
+                <div className="glass rounded-3xl p-8 h-full border border-white/20 hover:border-[#0e67ff]/40 transition-all duration-300">
                   {/* Glow Effect */}
                   <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 glow`} />
-                  
+
                   <div className="relative z-10">
-                    <div className={`w-14 h-14 rounded-2xl bg-black flex items-center justify-center mb-6`}>
+                    <div className={`w-14 h-14 rounded-2xl bg-[#0e67ff] flex items-center justify-center mb-6`}>
                       <Icon size={28} className="text-white" />
                     </div>
-                    
+
                     <h3 className="text-2xl font-bold mb-3 text-black transition-colors">
                       {service.title}
                     </h3>
-                    
+
                     <p className="text-black/70 leading-relaxed">
                       {service.description}
                     </p>

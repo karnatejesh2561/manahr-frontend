@@ -73,7 +73,7 @@ export default function CaseStudiesPageContent() {
                                     </div>
                                     <motion.div
                                         whileHover={{ scale: 1.1, rotate: 45 }}
-                                        className="w-12 h-12 rounded-full bg-black flex items-center justify-center flex-shrink-0"
+                                        className="w-12 h-12 rounded-full bg-[#0e67ff] flex items-center justify-center flex-shrink-0"
                                     >
                                         <ArrowUpRight size={24} className="text-white" />
                                     </motion.div>
@@ -83,7 +83,7 @@ export default function CaseStudiesPageContent() {
                                     <div className="space-y-6">
                                         <div>
                                             <h3 className="text-lg font-semibold text-black mb-3 flex items-center gap-2">
-                                                <div className="w-1 h-6 bg-black rounded-full" />
+                                                <div className="w-1 h-6 bg-[#0e67ff] rounded-full" />
                                                 Challenge
                                             </h3>
                                             <p className="text-black/70 leading-relaxed">{study.challenge}</p>
@@ -91,7 +91,7 @@ export default function CaseStudiesPageContent() {
 
                                         <div>
                                             <h3 className="text-lg font-semibold text-black mb-3 flex items-center gap-2">
-                                                <div className="w-1 h-6 bg-black rounded-full" />
+                                                <div className="w-1 h-6 bg-[#0e67ff] rounded-full" />
                                                 Solution
                                             </h3>
                                             <p className="text-black/70 leading-relaxed">{study.solution}</p>
@@ -101,7 +101,7 @@ export default function CaseStudiesPageContent() {
                                             <h3 className="text-lg font-semibold text-black mb-3">Technologies</h3>
                                             <div className="flex flex-wrap gap-2">
                                                 {study.technologies.map((tech) => (
-                                                    <span key={tech} className="px-3 py-1 bg-black/10 text-black text-sm rounded-full">
+                                                    <span key={tech} className="px-3 py-1 bg-[#0e67ff]/10 text-[#0e67ff] text-sm rounded-full">
                                                         {tech}
                                                     </span>
                                                 ))}
@@ -134,19 +134,19 @@ export default function CaseStudiesPageContent() {
                         </motion.div>
                     ))}
                 </div>
-
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.5 }}
-                    className="text-center mt-16"
+                    transition={{ duration: 0.6, delay: 0.8 }}
+                    className="py-24 px-4 sm:px-6 lg:px-8 text-center mt-16 relative rounded-[2.5rem] overflow-hidden"
                 >
-                    <p className="text-lg text-slate/70 mb-6">Want similar results for your business?</p>
+                    <div className="absolute inset-0 bg-[#FD4F0F] opacity-95" />
+                    <p className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight relative z-10 text-white">Want similar results for your <br /> business?</p>
                     <a href="/contact">
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 bg-yellow text-slate font-semibold rounded-full glow-yellow hover:shadow-xl transition-all duration-300"
+                            className="px-8 py-4 bg-white cursor-pointer text-black font-semibold rounded-full relative z-10 hover:bg-white transition-all duration-300"
                         >
                             Start Your Project
                         </motion.button>

@@ -128,7 +128,7 @@ export default function AboutPageContent() {
                                     whileHover={{ y: -5 }}
                                     className="glass rounded-3xl p-8 text-center border border-white/20 hover:border-black/30 transition-all duration-300"
                                 >
-                                    <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-black flex items-center justify-center">
+                                    <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-[#0e67ff] flex items-center justify-center">
                                         <Icon size={32} className="text-white" />
                                     </div>
                                     <h3 className="text-xl font-bold text-black mb-3">{value.title}</h3>
@@ -164,7 +164,7 @@ export default function AboutPageContent() {
                                     className="group"
                                 >
                                     <div className="glass rounded-3xl p-8 text-center border border-white/20 hover:border-black/30 transition-all duration-300 h-full">
-                                        <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-black flex items-center justify-center">
+                                        <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-[#0e67ff] flex items-center justify-center">
                                             <Icon size={40} className="text-white" />
                                         </div>
                                         <h3 className="text-xl font-bold text-black mb-2">{member.role}</h3>
@@ -212,16 +212,17 @@ export default function AboutPageContent() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.8 }}
-                    className="text-center mt-16"
+                    className="py-24 px-4 sm:px-6 lg:px-8 text-center mt-16 relative rounded-[2.5rem] overflow-hidden"
                 >
-                    <p className="text-lg text-slate/70 mb-6">Ready to work with us?</p>
+                    <div className="absolute inset-0 bg-[#FD4F0F] opacity-95" />
+                    <p className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight relative z-10 text-white">Ready to work with us?</p>
                     <a href="/contact">
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 bg-yellow text-slate font-semibold rounded-full glow-yellow hover:shadow-xl transition-all duration-300"
+                            className="px-8 py-4 bg-white cursor-pointer text-black font-semibold rounded-full relative z-10 hover:bg-white transition-all duration-300"
                         >
-                            Get in Touch
+                            Start Your Project
                         </motion.button>
                     </a>
                 </motion.div>

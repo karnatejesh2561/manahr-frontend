@@ -136,7 +136,7 @@ export default function ServicesPageContent() {
                             >
                                 <div className="glass rounded-3xl p-8 h-full border border-white/20 hover:border-black/30 transition-all duration-300">
                                     <div className="relative z-10">
-                                        <div className="w-16 h-16 rounded-2xl bg-black flex items-center justify-center mb-6">
+                                        <div className="w-16 h-16 rounded-2xl bg-[#0e67ff] flex items-center justify-center mb-6">
                                             <Icon size={32} className="text-white" />
                                         </div>
                                         <h3 className="text-2xl font-bold mb-3 text-black">{service.title}</h3>
@@ -155,19 +155,19 @@ export default function ServicesPageContent() {
                         );
                     })}
                 </div>
-
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.8 }}
-                    className="text-center mt-16"
+                    className="py-24 px-4 sm:px-6 lg:px-8 text-center mt-16 relative rounded-[2.5rem] overflow-hidden"
                 >
-                    <p className="text-lg text-slate/70 mb-6">Ready to get started?</p>
+                    <div className="absolute inset-0 bg-[#FD4F0F] opacity-95" />
+                    <p className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight relative z-10 text-white">Ready to get started?</p>
                     <a href="/contact">
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 bg-yellow text-slate font-semibold rounded-full glow-yellow transition-all duration-300"
+                            className="px-8 py-4 bg-white cursor-pointer text-black font-semibold rounded-full relative z-10 hover:bg-white transition-all duration-300"
                         >
                             Schedule a Consultation
                         </motion.button>

@@ -5,18 +5,19 @@ interface LogoProps {
   className?: string;
   width?: number;
   height?: number;
+  type?: string
 }
 
-const Logo: React.FC<LogoProps> = ({ className = '', width = 180, height = 48 }) => {
+const Logo: React.FC<LogoProps> = ({ className = '', width = 180, height = 48, type = 'logo-black' }) => {
   return (
     <div className={`relative ${className}`}>
       <Image
-        src="/logo.svg"
+        src={type === 'logo-white' ? "/logo-white.svg" : "/logo.svg"}
         alt="ManaTech"
         width={width}
         height={height}
         priority
-        className="w-auto h-auto"
+        className="h-[50px] object-cover"
       />
     </div>
   );
