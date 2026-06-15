@@ -99,10 +99,11 @@ export default function BlogPageContent() {
                     </p>
                     <Link href="/contact">
                         <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 bg-black text-white font-semibold rounded-full hover:shadow-lg transition-all"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                            className="relative px-8 py-4 bg-[#0e67ff] text-white font-semibold rounded-full shadow-[0_18px_40px_rgba(14,103,255,0.18)] transition-all duration-300 hover:bg-[#0858d6]"
                         >
+                            <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                             Contact us for inquiries
                         </motion.button>
                     </Link>

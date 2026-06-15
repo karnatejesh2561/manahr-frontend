@@ -123,10 +123,11 @@ export default function ContactPageContent() {
 
                                 <motion.button
                                     type="submit"
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    className="w-full px-8 py-4 font-semibold rounded-full flex items-center justify-center gap-2 transition-all duration-300 bg-[#0e67ff] text-white glow hover:bg-[#0858d6] hover:shadow-xl"
+                                    whileHover={{ scale: 1.03 }}
+                                    whileTap={{ scale: 0.97 }}
+                                    className="w-full overflow-hidden relative px-8 py-4 font-semibold rounded-full flex items-center justify-center gap-2 transition-all duration-300 bg-[#0e67ff] text-white shadow-[0_18px_40px_rgba(14,103,255,0.18)] hover:bg-[#0858d6]"
                                 >
+                                    <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                                     Send Message
                                     <Send size={20} />
                                 </motion.button>
@@ -145,7 +146,8 @@ export default function ContactPageContent() {
 
                             <div className="space-y-6">
                                 <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-[#0e67ff] flex items-center justify-center flex-shrink-0">
+                                    <div className="w-12 h-12 overflow-hidden relative rounded-xl bg-[#FD4F0F] flex items-center justify-center flex-shrink-0">
+                                        <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                                         <Mail size={24} className="text-white" />
                                     </div>
                                     <div>
@@ -157,7 +159,8 @@ export default function ContactPageContent() {
                                 </div>
 
                                 <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-[#0e67ff] flex items-center justify-center flex-shrink-0">
+                                    <div className="w-12 h-12 overflow-hidden relative rounded-xl bg-[#FD4F0F] flex items-center justify-center flex-shrink-0">
+                                        <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                                         <Phone size={24} className="text-white" />
                                     </div>
                                     <div>
@@ -173,7 +176,8 @@ export default function ContactPageContent() {
                                 </div>
 
                                 <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-[#0e67ff] flex items-center justify-center flex-shrink-0">
+                                    <div className="w-12 h-12 overflow-hidden relative rounded-xl bg-[#FD4F0F] flex items-center justify-center flex-shrink-0">
+                                        <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                                         <MapPin size={24} className="text-white" />
                                     </div>
                                     <div>

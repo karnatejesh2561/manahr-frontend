@@ -66,7 +66,7 @@ const BackgroundEffects: React.FC = () => {
                             repeat: Infinity,
                             delay: box.delay,
                         }}
-                        className="absolute bg-[#EF4E25]"
+                        className="absolute bg-black"
                         style={{
                             left: `${box.col * gridSize}px`,
                             top: `${box.row * gridSize}px`,
@@ -78,7 +78,7 @@ const BackgroundEffects: React.FC = () => {
             </div>
 
             {/* Noise Texture */}
-            <div className="absolute inset-0 noise opacity-50" />
+            <div className="absolute inset-0 noise opacity-40" />
         </div>
     );
 };

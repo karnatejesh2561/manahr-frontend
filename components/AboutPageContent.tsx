@@ -128,8 +128,9 @@ export default function AboutPageContent() {
                                     whileHover={{ y: -5 }}
                                     className="glass rounded-3xl p-8 text-center border border-white/20 hover:border-black/30 transition-all duration-300"
                                 >
-                                    <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-[#0e67ff] flex items-center justify-center">
+                                    <div className="w-16 h-16 relative overflow-hidden mx-auto mb-6 rounded-2xl bg-[#FD4F0F] flex items-center justify-center">
                                         <Icon size={32} className="text-white" />
+                                        <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                                     </div>
                                     <h3 className="text-xl font-bold text-black mb-3">{value.title}</h3>
                                     <p className="text-black/70">{value.description}</p>
@@ -164,7 +165,8 @@ export default function AboutPageContent() {
                                     className="group"
                                 >
                                     <div className="glass rounded-3xl p-8 text-center border border-white/20 hover:border-black/30 transition-all duration-300 h-full">
-                                        <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-[#0e67ff] flex items-center justify-center">
+                                        <div className="w-24 h-24 relative overflow-hidden mx-auto mb-6 rounded-full bg-black flex items-center justify-center">
+                                            <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                                             <Icon size={40} className="text-white" />
                                         </div>
                                         <h3 className="text-xl font-bold text-black mb-2">{member.role}</h3>
@@ -218,13 +220,15 @@ export default function AboutPageContent() {
                     <p className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight relative z-10 text-white">Ready to work with us?</p>
                     <a href="/contact">
                         <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 bg-white cursor-pointer text-black font-semibold rounded-full relative z-10 hover:bg-white transition-all duration-300"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                            className="relative overflow-hidden px-8 py-4 bg-[#0e67ff] cursor-pointer text-white font-semibold rounded-full z-10 shadow-[0_18px_40px_rgba(14,103,255,0.18)] transition-all duration-300 hover:bg-[#0858d6]"
                         >
+                            <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                             Start Your Project
                         </motion.button>
                     </a>
+
                 </motion.div>
             </div>
         </div>

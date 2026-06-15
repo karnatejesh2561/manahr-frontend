@@ -46,10 +46,11 @@ const CTASection: React.FC = () => {
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                             <Link href="/contact">
                                 <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="group px-8 py-4 bg-white text-black font-semibold rounded-full shadow-2xl flex items-center gap-2 transition-all duration-300"
+                                    whileHover={{ scale: 1.03 }}
+                                    whileTap={{ scale: 0.97 }}
+                                    className="group relative overflow-hidden px-8 py-4 bg-[#0e67ff] text-white font-semibold rounded-full shadow-[0_18px_40px_rgba(14,103,255,0.18)] flex items-center gap-2 transition-all duration-300"
                                 >
+                                    <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                                     Get Started Now
                                     <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                                 </motion.button>
@@ -57,9 +58,9 @@ const CTASection: React.FC = () => {
 
                             <Link href="/services">
                                 <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-4 bg-white/20 backdrop-blur-sm border-2 border-white text-white font-semibold rounded-full hover:bg-white/30 transition-all duration-300"
+                                    whileHover={{ scale: 1.03 }}
+                                    whileTap={{ scale: 0.97 }}
+                                    className="relative px-8 py-4 bg-white text-black font-semibold rounded-full shadow-[0_18px_40px_rgba(14,103,255,0.18)] transition-all duration-300"
                                 >
                                     Explore Services
                                 </motion.button>

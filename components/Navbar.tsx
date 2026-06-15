@@ -75,20 +75,24 @@ const Navbar: React.FC = () => {
                             <motion.button
                                 whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.97 }}
-                                className="px-6 py-2.5 bg-[#0e67ff] text-white font-semibold rounded-full shadow-[0_18px_40px_rgba(14,103,255,0.18)] transition-all duration-300 hover:bg-[#0858d6]"
+                                className="overflow-hidden px-6 py-2.5 bg-[#0e67ff] text-white font-semibold rounded-full shadow-[0_18px_40px_rgba(14,103,255,0.18)] relative transition-all duration-300"
                             >
+                                <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                                 Book a Call
                             </motion.button>
                         </a>
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <button
+                    <motion.button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="md:hidden relative  p-2.5 bg-[#0e67ff] text-white rounded-full shadow-[0_18px_40px_rgba(14,103,255,0.18)] transition-all duration-300 hover:bg-[#0858d6]"
                     >
+                        <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                         {isOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
+                    </motion.button>
                 </div>
             </div>
 
@@ -126,7 +130,8 @@ const Navbar: React.FC = () => {
                                 className="pt-2"
                             >
                                 <a href="mailto:manatechservices.support@gmail.com?subject=Book a Call Request&body=Hi, I would like to schedule a call to discuss my project." onClick={() => setIsOpen(false)}>
-                                    <button className="w-full px-6 py-3.5 sm:py-3 bg-[#0e67ff] text-white font-semibold rounded-full glow text-base sm:text-sm transition-all duration-300 hover:bg-[#0858d6] hover:scale-[1.01]">
+                                    <button className=" relative overflow-hidden w-full px-6 py-3.5 sm:py-3 bg-[#0e67ff] text-white font-semibold rounded-full glow text-base sm:text-sm transition-all duration-300 hover:bg-[#0858d6] hover:scale-[1.01]">
+                                        <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                                         Book a Call
                                     </button>
                                 </a>

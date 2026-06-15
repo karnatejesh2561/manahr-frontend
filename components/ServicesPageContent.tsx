@@ -136,7 +136,8 @@ export default function ServicesPageContent() {
                             >
                                 <div className="glass rounded-3xl p-8 h-full border border-white/20 hover:border-black/30 transition-all duration-300">
                                     <div className="relative z-10">
-                                        <div className="w-16 h-16 rounded-2xl bg-[#0e67ff] flex items-center justify-center mb-6">
+                                        <div className="w-16 h-16 relative overflow-hidden rounded-2xl bg-[#FD4F0F] flex items-center justify-center mb-6">
+                                            <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                                             <Icon size={32} className="text-white" />
                                         </div>
                                         <h3 className="text-2xl font-bold mb-3 text-black">{service.title}</h3>
@@ -165,10 +166,11 @@ export default function ServicesPageContent() {
                     <p className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight relative z-10 text-white">Ready to get started?</p>
                     <a href="/contact">
                         <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 bg-white cursor-pointer text-black font-semibold rounded-full relative z-10 hover:bg-white transition-all duration-300"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                            className="relative overflow-hidden px-8 py-4 bg-[#0e67ff] cursor-pointer text-white font-semibold rounded-full z-10 shadow-[0_18px_40px_rgba(14,103,255,0.18)] transition-all duration-300 hover:bg-[#0858d6]"
                         >
+                            <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                             Schedule a Consultation
                         </motion.button>
                     </a>

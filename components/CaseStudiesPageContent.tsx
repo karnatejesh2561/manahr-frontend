@@ -73,8 +73,9 @@ export default function CaseStudiesPageContent() {
                                     </div>
                                     <motion.div
                                         whileHover={{ scale: 1.1, rotate: 45 }}
-                                        className="w-12 h-12 rounded-full bg-[#0e67ff] flex items-center justify-center flex-shrink-0"
+                                        className="w-12 h-12 relative overflow-hidden rounded-full bg-[#FD4F0F] flex items-center justify-center flex-shrink-0"
                                     >
+                                        <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                                         <ArrowUpRight size={24} className="text-white" />
                                     </motion.div>
                                 </div>
@@ -123,7 +124,7 @@ export default function CaseStudiesPageContent() {
                                                     transition={{ delay: 0.1 * idx }}
                                                     className="flex items-start gap-3 p-3 rounded-xl bg-white/40 hover:bg-white/60 transition-colors"
                                                 >
-                                                    <CheckCircle2 size={20} className="text-black mt-0.5 flex-shrink-0" />
+                                                    <CheckCircle2 size={20} className="text-[#FD4F0F] mt-0.5 flex-shrink-0" />
                                                     <span className="text-black/80">{result}</span>
                                                 </motion.div>
                                             ))}
@@ -144,10 +145,11 @@ export default function CaseStudiesPageContent() {
                     <p className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight relative z-10 text-white">Want similar results for your <br /> business?</p>
                     <a href="/contact">
                         <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 bg-white cursor-pointer text-black font-semibold rounded-full relative z-10 hover:bg-white transition-all duration-300"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                            className="relative overflow-hidden px-8 py-4 bg-[#0e67ff] cursor-pointer text-white font-semibold rounded-full z-10 shadow-[0_18px_40px_rgba(14,103,255,0.18)] transition-all duration-300 hover:bg-[#0858d6]"
                         >
+                            <span className="absolute block inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-full z-2" />
                             Start Your Project
                         </motion.button>
                     </a>
