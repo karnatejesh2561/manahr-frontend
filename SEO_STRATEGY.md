@@ -13,9 +13,9 @@
 
 ### 1. **Google Search Console Setup** (CRITICAL)
 - Go to [Google Search Console](https://search.google.com/search-console)
-- Add property: `https://manatech-murex.vercel.app/`
+- Add property: `https://manatechservices.com/`
 - Verify ownership (add verification code to `lib/seo.ts`)
-- Submit sitemap: `https://manatech-murex.vercel.app/sitemap.xml`
+- Submit sitemap: `https://manatechservices.com/sitemap.xml`
 - Monitor indexing & search performance
 
 ### 2. **Google Analytics 4** (CRITICAL)

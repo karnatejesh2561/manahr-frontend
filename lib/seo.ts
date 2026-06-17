@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 const siteName = 'ManaTech';
 const siteDescription = 'ManaTech builds scalable SaaS platforms, enterprise software, and modern digital products for growing businesses.';
-const siteUrl = new URL('https://manatech-murex.vercel.app/');
+const siteUrl = new URL('https://manatechservices.com/');
 const defaultImage = new URL('logo-m.svg/', siteUrl).toString();
 const twitterHandle = '@manatechio';
 const defaultKeywords = [

@@ -5,48 +5,48 @@
   
   <!-- Homepage -->
   <url>
-    <loc>https://manatech-murex.vercel.app/</loc>
-    <lastmod>2026-06-13</lastmod>
+    <loc>https://manatechservices.com/</loc>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
   <!-- About Page -->
   <url>
-    <loc>https://manatech-murex.vercel.app/about</loc>
-    <lastmod>2026-06-13</lastmod>
+    <loc>https://manatechservices.com/about</loc>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <!-- Services Page -->
   <url>
-    <loc>https://manatech-murex.vercel.app/services</loc>
-    <lastmod>2026-06-13</lastmod>
+    <loc>https://manatechservices.com/services</loc>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <!-- Case Studies -->
   <url>
-    <loc>https://manatech-murex.vercel.app/case-studies</loc>
-    <lastmod>2026-06-13</lastmod>
+    <loc>https://manatechservices.com/case-studies</loc>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <!-- Contact Page -->
   <url>
-    <loc>https://manatech-murex.vercel.app/contact</loc>
-    <lastmod>2026-06-13</lastmod>
+    <loc>https://manatechservices.com/contact</loc>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <!-- Demos -->
   <url>
-    <loc>https://manatech-murex.vercel.app/demos</loc>
-    <lastmod>2026-06-13</lastmod>
+    <loc>https://manatechservices.com/demos</loc>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

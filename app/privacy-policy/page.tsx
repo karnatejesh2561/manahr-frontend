@@ -46,7 +46,7 @@ export default function PrivacyPolicyPage() {
                             <h2 className="text-2xl font-semibold mb-3">1. Data controller</h2>
                             <p className="leading-8 text-black/75">
                                 ManaTech is the data controller for personal information collected through this website. For questions about your data, email us at{' '}
-                                <a href="mailto:manatech.services.official@gmail.com" className="text-[#0e67ff] font-semibold">manatech.services.official@gmail.com</a>.
+                                <a href="mailto:manatechservices.support@gmail.com" className="text-[#0e67ff] font-semibold">manatechservices.support@gmail.com</a>.
                             </p>
                         </section>
 
@@ -111,7 +111,7 @@ export default function PrivacyPolicyPage() {
                             </p>
                             <p className="leading-8 text-black/75">
                                 To exercise your rights, contact us at{' '}
-                                <a href="mailto:manatech.services.official@gmail.com" className="text-[#0e67ff] font-semibold">manatech.services.official@gmail.com</a>.
+                                <a href="mailto:manatechservices.support@gmail.com" className="text-[#0e67ff] font-semibold">manatechservices.support@gmail.com</a>.
                             </p>
                         </section>
 

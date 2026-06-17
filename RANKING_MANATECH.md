@@ -11,16 +11,16 @@ You're competing with MANATEC (industrial shaft alignment systems company). Your
 - [ ] **Google Search Console Verification**
   ```
   1. Go to https://search.google.com/search-console
-  2. Add property: https://manatech-murex.vercel.app
+  2. Add property: https://manatechservices.com
   3. Verify via HTML tag:
      Add to lib/seo.ts: google: 'YOUR_VERIFICATION_CODE'
-  4. Submit sitemap: https://manatech-murex.vercel.app/sitemap.xml
+  4. Submit sitemap: https://manatechservices.com/sitemap.xml
   ```
 
 - [ ] **Google Analytics Setup**
   ```
   1. Go to https://analytics.google.com
-  2. Create property for manatech-murex.vercel.app
+  2. Create property for manatechservices.com
   3. Add tracking code to layout.tsx
   ```
 

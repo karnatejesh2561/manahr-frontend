@@ -39,9 +39,9 @@
 ### Priority 1: Google Search Console (THIS WEEK)
 ```
 1. Go to: https://search.google.com/search-console
-2. Add your site: https://manatech-murex.vercel.app
+2. Add your site: https://manatechservices.com
 3. Verify ownership (add code to lib/seo.ts if not done)
-4. Submit sitemap: https://manatech-murex.vercel.app/sitemap.xml
+4. Submit sitemap: https://manatechservices.com/sitemap.xml
 5. Monitor: Check for crawl errors, index status
 ```
 
@@ -202,9 +202,9 @@ Create accounts:
 
 ## 🔗 Important Links
 
-- **Deployment:** https://manatech-murex.vercel.app/
-- **Sitemap:** https://manatech-murex.vercel.app/sitemap.xml
-- **Blog:** https://manatech-murex.vercel.app/blog
+- **Deployment:** https://manatechservices.com/
+- **Sitemap:** https://manatechservices.com/sitemap.xml
+- **Blog:** https://manatechservices.com/blog
 - **Google Search Console:** https://search.google.com/search-console
 - **Google Analytics:** https://analytics.google.com
 - **SEO Guide:** See `SEO_STRATEGY.md`

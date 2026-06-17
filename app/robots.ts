@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin/', '/.next/', '/private/'],
     },
-    sitemap: 'https://manatech-murex.vercel.app/sitemap.xml',
+    sitemap: 'https://manatechservices.com/sitemap.xml',
   };
 }

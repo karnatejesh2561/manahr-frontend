@@ -94,7 +94,7 @@ export default function TermsAndConditionsPage() {
                             <h2 className="text-2xl font-semibold mb-3">6. Contact</h2>
                             <p className="leading-8 text-black/75 mb-4">
                                 For questions or clarifications about these terms, email us at{' '}
-                                <a href="mailto:manatech.services.official@gmail.com" className="text-[#0e67ff] font-semibold">manatech.services.official@gmail.com</a>.
+                                <a href="mailto:manatechservices.support@gmail.com" className="text-[#0e67ff] font-semibold">manatechservices.support@gmail.com</a>.
                             </p>
                             <div className="rounded-[1.75rem] bg-[#0e67ff] p-6 text-white">
                                 <p className="font-semibold">Need more detail?</p>

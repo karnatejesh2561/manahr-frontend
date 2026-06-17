@@ -5,7 +5,7 @@ Disallow: /.next/
 Disallow: /private/
 Disallow: *.json$
 
-Sitemap: https://manatech-murex.vercel.app/sitemap.xml
+Sitemap: https://manatechservices.com/sitemap.xml
 
 # Rate limiting for crawlers
 User-agent: AhrefsBot

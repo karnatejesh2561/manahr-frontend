@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
                             <a href="https://www.instagram.com/manatechservices" target='_blank' className=" rounded-lg hover:text-white text-white/70 transition-colors">
                                 <BsInstagram size={20} />
                             </a>
-                            <a href="mailto:manatech.services.official@gmail.com" target='_blank' className=" rounded-lg hover:text-white text-white/70 transition-colors">
+                            <a href="mailto:manatechservices.support@gmail.com" target='_blank' className=" rounded-lg hover:text-white text-white/70 transition-colors">
                                 <BsEnvelope size={20} />
                             </a>
                         </div>
@@ -50,7 +50,7 @@ const Footer: React.FC = () => {
                             <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
                             <li><Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
                             <li><Link href="/terms-and-conditions" className="hover:text-white transition-colors">Terms & Conditions</Link></li>
-                            <li><a href="mailto:manatech.services.official@gmail.com" className="hover:text-white transition-colors break-all">manatech.services.official@gmail.com</a></li>
+                            <li><a href="mailto:manatechservices.support@gmail.com" className="hover:text-white transition-colors break-all">manatechservices.support@gmail.com</a></li>
                         </ul>
                     </div>
                 </div>
